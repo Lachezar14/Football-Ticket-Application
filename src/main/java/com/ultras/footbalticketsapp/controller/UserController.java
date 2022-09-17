@@ -20,6 +20,11 @@ public class UserController {
         return "User added successfully";
     }
 
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable("userId") int userId){
+        return userService.getUserById(userId);
+    }
+
     @GetMapping("/all")
     public List<User> getAllUsers(){
         return userService.getAllUsers();
