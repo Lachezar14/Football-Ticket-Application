@@ -27,10 +27,12 @@ stages:
 
 build: 
   stage: build 
-  script: 
+  script:
+      - cd football-tickets-app
       - ./gradlew assemble 
 
 test: 
   stage: test 
-  script: 
+  script:
+      - cd football-tickets-app
       - ./gradlew test  
