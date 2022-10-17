@@ -4,7 +4,6 @@ import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
 import com.ultras.footbalticketsapp.dto.user.UserDTO;
 import com.ultras.footbalticketsapp.model.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 

@@ -2,6 +2,7 @@
 import authHeader from "./authHeader";
 import jwt_decode from "jwt-decode";
 import {useState} from "react";
+import userService from "./userService";
 
 const usersUrl = 'http://localhost:8080/api';
 
@@ -19,22 +20,40 @@ const login = (data) => {
     return axios
         .post(`${usersUrl}/login` , data)
         .then((response) => {
-            console.log(response);
+            //console.log(response);
             if (response.data.access_token) {
-                localStorage.setItem("user", JSON.stringify(response.data));
+                const info = jwt_decode(response.data.access_token);
+                userService.getUserByEmail(info.sub).then((response) => {
+                    localStorage.setItem("user", JSON.stringify(response.data));
+                    //console.log(response.data);})
             } else {
                 console.warn("No tokens in response");
             }
             return response.data;
         });
-};
+}
+
+{/*
+const login = (data) => {
+    return axios
+        .post(`${usersUrl}/login` , data)
+        .then((response) => {
+            console.log(response);
+            if (response.data.access_token) {
+                //console.log(response.data);
+                //localStorage.setItem("user", JSON.stringify(response.data));
+            } else {
+                console.warn("No tokens in response");
+            }
+            return response.data;
+        });
+};*/}
 
 /**
  * @returns {UserLoginDto}
  */
 const getCurrentUser = () => {
     return JSON.parse(localStorage.getItem("user")) || null;
-    
 };
 
 const isAuthenticated = () => {

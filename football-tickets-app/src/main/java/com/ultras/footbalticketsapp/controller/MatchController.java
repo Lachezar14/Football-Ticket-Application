@@ -4,8 +4,11 @@ import com.ultras.footbalticketsapp.model.Match;
 import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,20 +23,20 @@ public class MatchController {
         this.matchService = matchService;
     }
 
-    @PostMapping("/")
-    public String addMatch(@RequestBody Match match){
-        matchService.saveMatch(match);
-        return "Match added successfully";
+    @PostMapping("/add")
+    public ResponseEntity<Match> saveMatch(@RequestBody Match match){
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/add").toUriString());
+        return ResponseEntity.created(uri).body(matchService.saveMatch(match));
     }
 
     @GetMapping("/{matchId}")
-    public Match getMatch(@PathVariable("matchId") int matchId){
-        return matchService.getMatchById(matchId);
+    public ResponseEntity<Match> getMatch(@PathVariable("matchId") int matchId){
+        return ResponseEntity.ok().body(matchService.getMatchById(matchId));
     }
 
     @GetMapping("/")
-    public List<Match> getAllMatches(){
-        return matchService.getAllMatches();
+    public ResponseEntity<List<Match>> getAllMatches(){
+        return ResponseEntity.ok().body(matchService.getAllMatches());
     }
 
     @DeleteMapping("/{matchId}")

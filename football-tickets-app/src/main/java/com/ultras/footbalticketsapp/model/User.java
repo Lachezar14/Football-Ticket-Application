@@ -1,5 +1,6 @@
 package com.ultras.footbalticketsapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +25,8 @@ public class User{
     private String password;
 
     @OneToMany
-//    @JoinColumn(name = "ticket_id", referencedColumnName = "id")
+    @JsonIgnore
+    @JoinColumn(name = "buyer_id", referencedColumnName = "id")
     List<Ticket> tickets = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

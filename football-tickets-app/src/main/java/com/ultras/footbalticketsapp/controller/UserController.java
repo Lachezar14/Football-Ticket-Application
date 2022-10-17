@@ -1,6 +1,7 @@
 package com.ultras.footbalticketsapp.controller;
 
 import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
+import com.ultras.footbalticketsapp.dto.user.UserDTO;
 import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.serviceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -29,14 +31,20 @@ public class UserController {
 
     @PostMapping("/register")
 //    public ResponseEntity<RegisterUserResponse> saveUser(@RequestBody RegisterUserRequest user) {
-    public ResponseEntity<User> saveUser(@RequestBody NewUserDTO user) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/register").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveUser(user));
+    public ResponseEntity<User> saveUser(@Valid @RequestBody NewUserDTO user) {
+        User savedUser = userService.saveUser(user);
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + savedUser.getId()).toUriString());
+        return ResponseEntity.created(uri).body(savedUser);
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable("userId") int userId){
-        return userService.getUserById(userId);
+    public ResponseEntity<User> getUser(@PathVariable("userId") int userId){
+        return ResponseEntity.ok().body(userService.getUserById(userId));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(value = "email") String email){
+        return ResponseEntity.ok().body(userService.getUserByEmail(email));
     }
 
     @GetMapping("/users")
@@ -51,8 +59,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public User updateUser(@PathVariable("userId") User user){
-        return userService.updateUser(user);
+    public User updateUser(@PathVariable("userId") UserDTO userDTO){
+        return userService.updateUser(userDTO);
     }
 
     @GetMapping("/token/refresh")

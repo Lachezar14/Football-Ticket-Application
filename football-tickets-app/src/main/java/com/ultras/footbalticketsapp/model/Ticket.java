@@ -1,5 +1,6 @@
 package com.ultras.footbalticketsapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,7 @@ public class Ticket {
     private Match match;
 
     @ManyToOne
-    @JoinColumn(name = "ticket_id", referencedColumnName = "id")
-    //@JoinColumn(name = "user_id", referencedColumnName = "id")
+    //@JoinColumn(name = "buyer_id", referencedColumnName = "id")
     private User buyer;
     private double price;
 

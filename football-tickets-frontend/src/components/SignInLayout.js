@@ -13,7 +13,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import Api from "../service/api";
+import api from "../service/api";
+import userService from "../service/userService";
 import jwt_decode from "jwt-decode";
 import {FormHelperText} from "@mui/material";
 
@@ -45,14 +46,10 @@ export default function SignIn() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        Api.login(data)
+        api.login(data)
             .then(() => {
-                console.log('hi!');
-                const user = jwt_decode(Api.getCurrentUser().access_token);
-                console.log(user);
-                if (user.roles.some(role => role === 'ROLE_USER')) {
-                    navigate('/profile');
-                }}
+                window.location.href = "/profile";
+                }
             )
             .catch((err) => {
                 console.error(err);
@@ -104,7 +101,7 @@ export default function SignIn() {
                             onChange={onChangePassword}
                             value={Password.password}
                         />
-                        <Box sx={{mt: 3, alignItems: 'center'}}>
+                        <Box sx={{mt: 3, display: 'flex', justifyContent: 'center'}}>
                             <FormHelperText error>
                                 {errorMessage}
                             </FormHelperText>

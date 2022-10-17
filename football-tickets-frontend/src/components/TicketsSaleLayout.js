@@ -13,8 +13,12 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from "@mui/material/TextField";
-import {render} from "react-dom";
 import {useLocation} from "react-router-dom";
+import Api from "../service/api";
+import jwt_decode from "jwt-decode";
+import userService from "../service/userService";
+import {useCallback, useEffect, useRef} from "react";
+import ticketService from "../service/ticketService";
 
 function Copyright() {
     return (
@@ -29,25 +33,47 @@ function Copyright() {
     );
 }
 
-
-
-const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-    });
-};
-
 const theme = createTheme();
 
 export default function Checkout() {
-
+    
     const {state} = useLocation();
     const match = state;
     console.log(match);
     
+    //const [user, setUser] = React.useState([]);
+    
+    const user = Api.getCurrentUser();
+    console.log(user);
+
+    {/*useEffect(() => {
+    userService.getUserByEmail(info.sub).then((res) => {
+        setUser(res.data);
+    });
+    }, []);
+    
+    console.log(user);*/}
+
+    
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        let ticket_number = data.get('tickets_number');
+        console.log(ticket_number);
+        
+        const ticket = {
+            price: match.match.ticket_price,
+            buyer: user,
+            match: match.match,
+        };
+        //console.log(ticket);
+
+         for (let i = 0; i < ticket_number; i++) {
+            ticketService.buyTickets(ticket).then((res) => {
+                console.log(ticket);
+            });
+        }
+    };
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -58,7 +84,7 @@ export default function Checkout() {
                             Checkout
                         </Typography>
                         <Typography component="h1" variant="h4" align="center">
-                            {match.homeTeam.name} vs {match.awayTeam.name}
+                            {match.match.home_team.name} vs {match.match.away_team.name}
                         </Typography>
                         <Typography component="h1" variant="h6" align="center">
                             {match.date}
@@ -76,10 +102,10 @@ export default function Checkout() {
                             autoFocus
                         />
                         <Typography component="h1" variant="h6" align="center" color={'red'}>
-                            Available Tickets: 50143 tickets
+                            Available Tickets: {match.match.ticket_number} tickets
                         </Typography>
                         <Typography component="h1" variant="h5" align="center" sx={{mt: 7}}>
-                            Total Price: {match.ticket_price} $
+                            Total Price: {match.match.ticket_price} $
                         </Typography>
                         <Button
                             type="submit"

@@ -14,11 +14,11 @@ public interface UserService {
     User saveUser(NewUserDTO user);
     Role saveRole(Role role);
     void addRoleToUser(User user, String roleName);
-    User getUserByEmail(String email);
+    UserDTO getUserByEmail(String email);
     User getUserById(int userId);
     List<User> getAllUsers();
     void deleteUserById(int userId);
-    User updateUser(User user);
-    UserDTO getUserDTO(String email);
+    User updateUser(UserDTO userDTO);
+    //UserDTO getUserDTO(String email);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }

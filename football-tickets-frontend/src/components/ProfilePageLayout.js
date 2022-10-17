@@ -10,11 +10,38 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import {useEffect, useRef, useState} from "react";
+import ticketService from "../service/ticketService";
+import userService from "../service/userService";
+import jwt_decode from "jwt-decode";
+import Api from "../service/api";
 
 
 export default function ProfilePageLayout() {
+    
+    //const [user, setUser] = React.useState([]);
 
-    const handleSubmit = (event) => {
+    const user = Api.getCurrentUser();
+    console.log(user);
+
+    {/*useEffect(() => {
+        userService.getUserByEmail(info.sub).then((res) => {
+            setUser(res.data);
+        });
+    }, []);
+    console.log(user);*/}
+    
+    const [tickets, setTickets] = useState([]);
+    
+    useEffect(() => {
+        ticketService.getTicketsByBuyer(user).then((res) => {
+            setTickets(res.data);
+        });
+    }, []);
+    console.log(tickets);
+    
+    
+    const handleUpdateProfileSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
@@ -22,7 +49,15 @@ export default function ProfilePageLayout() {
             password: data.get('password'),
         });
     };
-    
+
+    const handleUpdatePasswordSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        console.log({
+            email: data.get('email'),
+            password: data.get('password'),
+        });
+    };
     
     return (
         <Box sx={{ flexGrow: 1,mt: 15,ml: 5,mr: 5 }}>
@@ -41,15 +76,16 @@ export default function ProfilePageLayout() {
                                 fontSize: 170,
                             }}/>
                             <Typography component="h1" variant="h4" sx={{mb:5}}>
-                                Charles LeClair
+                                {user.first_name} {user.last_name}
                             </Typography>
-                            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
+                            <Box component="form" onSubmit={handleUpdateProfileSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
                                 <TextField
                                     margin="normal"
                                     required
                                     fullWidth
                                     label="First Name"
                                     name="first_name"
+                                    value={user.first_name}
                                     autoComplete="given-name"
                                     autoFocus
                                 />
@@ -59,6 +95,7 @@ export default function ProfilePageLayout() {
                                     fullWidth
                                     label="Last Name"
                                     name="last_name"
+                                    value={user.last_name}
                                     autoComplete="family-name"
                                     autoFocus
                                 />
@@ -68,6 +105,7 @@ export default function ProfilePageLayout() {
                                     fullWidth
                                     label="Phone Number"
                                     name="phone_number"
+                                    value={user.phone_number}
                                     autoComplete="phone-number"
                                     autoFocus
                                 />
@@ -77,6 +115,7 @@ export default function ProfilePageLayout() {
                                     fullWidth
                                     label="Email Address"
                                     name="username"
+                                    value={user.email}
                                     autoComplete="username"
                                     autoFocus
                                 />
@@ -104,7 +143,7 @@ export default function ProfilePageLayout() {
                                 <Typography component="h1" variant="h4" sx={{mt: 5,mb: 2}}>
                                     Change Password
                                 </Typography>
-                                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
+                                <Box component="form" onSubmit={handleUpdatePasswordSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
                                     <TextField
                                         margin="normal"
                                         required
@@ -151,8 +190,9 @@ export default function ProfilePageLayout() {
                             <Typography component="h1" variant="h4" sx={{mb: 5,mt: 5}}>
                                 Purchased Tickets
                             </Typography>
-                            {Array.from(Array(12)).map((_, index) => (
+                            {tickets?.map((ticket) => (
                                 <Card
+                                    key={ticket.id}
                                     sx={{width: 600, borderRadius: '10px', height: 300, mb:3}}
                                     variant="outlined"
                                 >
@@ -162,16 +202,16 @@ export default function ProfilePageLayout() {
                                             color="text.secondary"
                                             gutterBottom
                                         >
-                                            26.09.2022
+                                            {ticket.match.date}
                                         </Typography>
                                         <Typography variant="h4" component="div">
-                                            Manchester United vs Arsenal
+                                            {ticket.match.home_team.name} vs {ticket.match.away_team.name}
                                         </Typography>
                                         <Typography sx={{mb: 1.5}} color="text.secondary">
                                             4:30 PM
                                         </Typography>
                                         <Typography sx={{mb: 1.5}} color="text.secondary">
-                                            Stadium: Old Trafford
+                                            Stadium : {ticket.match.home_team.stadium.name}
                                         </Typography>
                                     </CardContent>
                                 </Card>

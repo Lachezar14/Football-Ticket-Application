@@ -11,17 +11,24 @@ import Container from '@mui/material/Container';
 import {useState, useEffect} from "react";
 import matchService from "../service/matchService";
 import {Link} from "react-router-dom";
-
+import TextField from "@mui/material/TextField";
 
 export default function MatchCardLayout() {
 
     const [matches, setMatches] = useState([]);
+    const [search, setSearch] = useState("");
     
     useEffect(() => {
         matchService.getMatches().then(res => setMatches(res.data))
         console.log(matches)
     }, []);{/*[matches]*/}
-    
+ 
+    const teamNames =["home_team", "away_team"];
+    const searchByName = (data) => {
+        return data.filter((value) => {
+            teamNames.some((teamName) => { value[teamName].toLowerCase().includes(search)})
+        })
+    }
     
     
     return (
@@ -53,8 +60,13 @@ export default function MatchCardLayout() {
                         spacing={2}
                         justifyContent="center"
                     >
-                        <Button variant="contained">Main call to action</Button>
-                        <Button variant="outlined">Secondary action</Button>
+                        <TextField
+                            id="search"
+                            label="Search field"
+                            type="search"
+                            variant="outlined"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </Stack>
                 </Container>
             </Box>
@@ -64,8 +76,13 @@ export default function MatchCardLayout() {
                 columns={{xs: 4, sm: 8, md: 12}} 
                 padding={5}
             >
-                {/*{Array.from(Array(12)).map((_, index)*/}
-                { matches?.map((match) => (
+                { matches?.filter((val) => {
+                    if (search === "") {
+                        return val
+                    } else if (val.home_team.name.toLowerCase().includes(search) || val.away_team.name.toLowerCase().includes(search)) {
+                        return val
+                    }})
+                   .map((match) => (
                     <Grid 
                         item xs={2} sm={4} md={4} 
                         key={match.id}>
@@ -79,13 +96,13 @@ export default function MatchCardLayout() {
                                     color="text.secondary" 
                                     gutterBottom
                                 >
-                                    {match.date}
+                                    {new Date(match.date).toLocaleDateString()}
                                 </Typography>
                                 <Typography variant="h4" component="div">
                                     {match.home_team.name} vs {match.away_team.name}
                                 </Typography>
                                 <Typography sx={{mb: 1.5}} color="text.secondary">
-                                    4:30 PM
+                                    {new Date(match.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                 </Typography>
                             </CardContent>
                             <CardActions sx={{display: 'flex', alignItems: 'flex-end', minWidth: 200}}>

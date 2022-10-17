@@ -40,7 +40,7 @@ public class MatchServiceImpl implements MatchService {
         match1.setHome_team(match.getHome_team());
         match1.setAway_team(match.getAway_team());
         match1.setDate(match.getDate());
-        match1.setTicket_number(match.getTicket_number());
+        //match1.setTicket_number(match.getTicket_number());
         return matchRepository.save(match1);
     }
 

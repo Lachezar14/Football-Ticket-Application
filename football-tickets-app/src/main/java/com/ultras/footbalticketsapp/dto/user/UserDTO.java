@@ -18,5 +18,4 @@ public class UserDTO {
     private String phone_number;
     private String email;
     private List<Role> roles;
-    private Map<String,String> tokens;
 }

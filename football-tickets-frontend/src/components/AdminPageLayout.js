@@ -15,33 +15,25 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import MenuItem from "@mui/material/MenuItem";
+import Api from "../service/api";
+import {useEffect, useState} from "react";
+import teamsService from "../service/teamsService";
+import matchService from "../service/matchService";
 
 
 export default function AdminPageLayout() {
 
-    const teams = [
-        {
-            value: 'USD',
-            label: '$',
-        },
-        {
-            value: 'EUR',
-            label: '€',
-        },
-        {
-            value: 'BTC',
-            label: '฿',
-        },
-        {
-            value: 'JPY',
-            label: '¥',
-        },
-    ];
-
-    const [homeTeam, setHomeTeam] = React.useState('EUR');
-    const [awayTeam, setAwayTeam] = React.useState('EUR');
-    const [value, setValue] = React.useState(dayjs('2014-08-18T21:11:54'));
-    const [match, setMatch] = React.useState(null);
+    const [teams, setTeams] = React.useState([]);
+    
+    useEffect(() => {
+        teamsService.getTeams().then(res => setTeams(res.data));
+    },  []);
+    
+    
+    const [homeTeam, setHomeTeam] = React.useState('');
+    const [awayTeam, setAwayTeam] = React.useState('');
+    const [date, setDate] = React.useState(dayjs());
+    const [match, setMatch] = React.useState([]);
     
     const matchHandleChange = (event) => {
         setMatch(event.target.value);
@@ -57,7 +49,7 @@ export default function AdminPageLayout() {
     
     
     const dateHandleChange = (newValue) => {
-        setValue(newValue);
+        setDate(newValue);
     };
     
     const handleSubmit = (event) => {
@@ -67,6 +59,41 @@ export default function AdminPageLayout() {
             email: data.get('email'),
             password: data.get('password'),
         });
+    };
+
+    const handleNewMatchSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        const match = {
+            date: date,
+            home_team: homeTeam,
+            away_team: awayTeam,
+            ticket_number: data.get('tickets_number'),
+            ticket_price: data.get('ticket_price'),
+            
+        };
+        console.log(match);
+        matchService.saveMatch(match).then((response) => {
+            console.log("MATCH created successfully", response.data);})
+        
+    };
+
+    const handleNewTeamSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        const object = {
+            name : data.get("name"),
+            stadium : {
+                name : data.get("stadium"),
+                capacity : data.get("capacity")
+            }
+        };
+        
+        teamsService.saveTeam(object).then((response) => {
+            console.log("TEAM created successfully", response.data);
+        })
     };
 
 
@@ -197,14 +224,15 @@ export default function AdminPageLayout() {
                             <Typography component="h1" variant="h4" sx={{mb: 5,mt: 5}}>
                                 Add New Match
                             </Typography>
-                            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
+                            <Box component="form" onSubmit={handleNewMatchSubmit}  sx={{ mt: 1,mr: 25,ml: 25 }}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DateTimePicker
                                         margin="normal"
                                         required
                                         fullWidth
+                                        name="date"
                                         label="Date and Time"
-                                        value={value}
+                                        value={date}
                                         onChange={dateHandleChange}
                                         renderInput={(params) => <TextField {...params} />}
                                     />
@@ -212,30 +240,32 @@ export default function AdminPageLayout() {
                                 <TextField
                                     margin="normal"
                                     id="outlined-select-currency"
+                                    required
                                     fullWidth
                                     select
                                     label="Home Team"
                                     value={homeTeam}
                                     onChange={homeTeamHandleChange}
                                 >
-                                    {teams.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
+                                    {teams.map((team) => (
+                                        <MenuItem key={team.id} value={team}>
+                                            {team.name}
                                         </MenuItem>
                                     ))}
                                 </TextField>
                                 <TextField
                                     margin="normal"
                                     id="outlined-select-currency"
+                                    required
                                     fullWidth
                                     select
                                     label="Away Team"
                                     value={awayTeam}
                                     onChange={awayTeamHandleChange}
                                 >
-                                    {teams.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
+                                    {teams.map((team) => (
+                                        <MenuItem key={team.id} value={team}>
+                                            {team.name}
                                         </MenuItem>
                                     ))}
                                 </TextField>
@@ -253,7 +283,7 @@ export default function AdminPageLayout() {
                                     required
                                     fullWidth
                                     label="Ticket Price"
-                                    name="price"
+                                    name="ticket_price"
                                     autoComplete="price"
                                     autoFocus
                                 />
@@ -268,7 +298,7 @@ export default function AdminPageLayout() {
                             </Box>
                         </Box>
                     </Card>
-                    <Grid item sx={{mt: 5}}>
+                    {/*<Grid item sx={{mt: 5}}>
                         <Card sx={{
                             borderRadius: '10px',
                             boxShadow: 3,
@@ -292,7 +322,7 @@ export default function AdminPageLayout() {
                                         onChange={matchHandleChange}
                                     >
                                         {teams.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
+                                            <MenuItem key={option.id} value={option.value}>
                                                 {option.label}
                                             </MenuItem>
                                         ))}
@@ -326,7 +356,7 @@ export default function AdminPageLayout() {
                                 </Box>
                             </Box>
                         </Card>
-                    </Grid>
+                    </Grid>*/}
                     <Grid item sx={{mt: 5}}>
                         <Card sx={{
                                 borderRadius: '10px',
@@ -340,7 +370,7 @@ export default function AdminPageLayout() {
                                 <Typography component="h1" variant="h4" sx={{mb: 5,mt: 5}}>
                                     Add New Football Team
                                 </Typography>
-                                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
+                                <Box component="form" onSubmit={handleNewTeamSubmit} sx={{ mt: 1,mr: 25,ml: 25 }}>
                                     <TextField
                                         margin="normal"
                                         required

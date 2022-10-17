@@ -11,19 +11,18 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import Api from "../service/api";
-import jwt_decode from "jwt-decode";
 import {Link} from "react-router-dom";
 
 const pages =
     (() => {
         if (Api.isAuthenticated()) {
-            const user = jwt_decode(Api.getCurrentUser().access_token);
-            if (user.roles.some(role => role === 'ROLE_USER')) {
+            const user = Api.getCurrentUser();
+            if (user.roles.some(role => role.name === 'ROLE_USER')) {
                 return (
                         [{name: 'Home', href: '/'},
                         {name: 'Matches', href: '/matches'},
                         {name: 'Profile', href: '/profile'}])
-            } else if (user.roles.some(role => role === 'ROLE_ADMIN')) {
+            } else if (user.roles.some(role => role.name === 'ROLE_ADMIN')) {
                 return (
                         [{name: 'Home', href: '/'},
                         {name: 'Matches', href: '/matches'},
@@ -53,14 +52,18 @@ const ResponsiveAppBar = () => {
     <AppBar position="sticky" sx={{height: 85,boxShadow: 3}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <SportsSoccerIcon
-            sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, fontSize: 40}}
-          />
+            <Link
+                to="/"
+            >
+                <SportsSoccerIcon
+                    sx={{ display: { xs: 'none', md: 'flex' }, color: 'white' ,mr: 1, fontSize: 40}}
+                />
+            </Link>
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="/"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -110,14 +113,16 @@ const ResponsiveAppBar = () => {
               ))}
             </Menu>
           </Box>
-          <SportsSoccerIcon
-            sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, fontSize: 40 }}
-          />
+            <Link to="/">
+                <SportsSoccerIcon
+                    sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, fontSize: 40 }}
+                />
+            </Link>
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href=""
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },

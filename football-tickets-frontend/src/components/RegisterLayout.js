@@ -21,8 +21,8 @@ export default function RegisterPage() {
     
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    let [regSuccess, setRegSuccess] = useState(false);
     let navigate = useNavigate();
-    let regSuccess = false;
     
     useEffect(() => {}, [errorMessage]);
     useEffect(() => {}, [successMessage]);
@@ -40,17 +40,26 @@ export default function RegisterPage() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         
-        const object = {};
-        data.forEach((value, key) => {object[key] = value});
+        const object = {
+            first_name: data.get('first_name'),
+            last_name: data.get('last_name'),
+            phone_number: data.get('phone_number'),
+            email: data.get('email'),
+            password: data.get('password'),
+            roleName: "ROLE_USER"
+        };
+        
+        //data.forEach((value, key) => {object[key] = value});
         
         Api.register(object).then((response) => {
             if (response.data.email) {
-                regSuccess = true;
+                setRegSuccess(true);
                 setSuccessMessage("Registration successful! Redirecting to login page...");
                 console.log("Registration successful", response.data);
             }
         })
             .catch((err) => {
+                setRegSuccess(false);
                 setErrorMessage(err.response.data.error);
         });
     };
@@ -128,9 +137,9 @@ export default function RegisterPage() {
                                 />
                             </Grid>
                         </Grid>
-                        <Box sx={{mt: 3}}>
+                        <Box sx={{mt: 3, display: 'flex', justifyContent: 'center'}}>
                             { regSuccess ?
-                                <FormHelperText success>
+                                <FormHelperText success sx={{color: 'green'}}>
                                     {successMessage} 
                                 </FormHelperText>
                             :
@@ -149,7 +158,7 @@ export default function RegisterPage() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/signIn" variant="body2">
+                                <Link href="/login" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

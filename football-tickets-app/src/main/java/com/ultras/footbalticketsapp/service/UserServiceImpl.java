@@ -104,8 +104,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDTO getUserByEmail(String email) {
+        return userMapper.userToUserDTO(userRepository.findByEmail(email));
     }
 
     @Override
@@ -114,21 +114,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(User user) {
+    public User updateUser(UserDTO userDTO) {
+        User user = userMapper.userDTOtoUser(userDTO);
         User userToUpdate = userRepository.findById(user.getId()).orElse(null);
         if(userToUpdate != null){
             userToUpdate.setFirst_name(user.getFirst_name());
             userToUpdate.setLast_name(user.getLast_name());
             userToUpdate.setPhone_number(user.getPhone_number());
             userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setRoles(user.getRoles());
         }
         return userRepository.save(userToUpdate);
     }
 
-    @Override
-    public UserDTO getUserDTO(String email) {
-        return userMapper.userToUserDTO(userRepository.findByEmail(email));
-    }
+    //@Override
+    //public UserDTO getUserDTO(String email) {
+    //    return userMapper.userToUserDTO(userRepository.findByEmail(email));
+    //}
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

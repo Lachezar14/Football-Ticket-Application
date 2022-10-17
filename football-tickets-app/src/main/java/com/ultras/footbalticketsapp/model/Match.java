@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "matches")
@@ -30,4 +32,9 @@ public class Match {
     private FootballTeam away_team;
     private Date date;
     private int ticket_number;
+    private double ticket_price;
+
+    //@OneToMany
+    //List<Ticket> tickets = new ArrayList<>();
+
 }
