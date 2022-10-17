@@ -1,5 +1,6 @@
 package com.ultras.footbalticketsapp.serviceInterface;
 
+import com.ultras.footbalticketsapp.dto.user.NewPasswordDTO;
 import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
 import com.ultras.footbalticketsapp.dto.user.UserDTO;
 import com.ultras.footbalticketsapp.model.Role;
@@ -20,5 +21,6 @@ public interface UserService {
     void deleteUserById(int userId);
     User updateUser(UserDTO userDTO);
     //UserDTO getUserDTO(String email);
+    boolean updatePassword(NewPasswordDTO newPasswordDTO);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }

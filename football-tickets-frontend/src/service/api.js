@@ -26,7 +26,7 @@ const login = (data) => {
                 userService.getUserByEmail(info.sub).then((response) => {
                     localStorage.setItem("user", JSON.stringify(response.data));
                     //console.log(response.data);})
-            } else {
+            })} else {
                 console.warn("No tokens in response");
             }
             return response.data;

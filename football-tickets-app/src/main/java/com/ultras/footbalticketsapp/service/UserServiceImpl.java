@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ultras.footbalticketsapp.dto.user.NewPasswordDTO;
 import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
 import com.ultras.footbalticketsapp.dto.user.UserDTO;
 import com.ultras.footbalticketsapp.mapper.UserMapper;
@@ -125,6 +126,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             userToUpdate.setRoles(user.getRoles());
         }
         return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public boolean updatePassword(NewPasswordDTO newPasswordDTO) {
+        User user = userRepository.findById(newPasswordDTO.getId()).orElse(null);
+        if(user != null){
+            if(bCryptPasswordEncoder.matches(newPasswordDTO.getCurrent_password(), user.getPassword())){
+                user.setPassword(bCryptPasswordEncoder.encode(newPasswordDTO.getNew_password()));
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
     }
 
     //@Override

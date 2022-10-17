@@ -10,6 +10,15 @@ const getUserByEmail = (email) => {
     }
 }
 
+const updatePassword = (object) => {
+    try{
+        return axios.put(`${usersURL}/new-password`, object)
+    } catch (error) {
+        console.log('Error while calling newPassword service ', error);
+    }
+}
+
 export default {
-    getUserByEmail
+    getUserByEmail,
+    updatePassword
 }

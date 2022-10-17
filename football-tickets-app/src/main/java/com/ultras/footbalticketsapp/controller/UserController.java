@@ -1,5 +1,6 @@
 package com.ultras.footbalticketsapp.controller;
 
+import com.ultras.footbalticketsapp.dto.user.NewPasswordDTO;
 import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
 import com.ultras.footbalticketsapp.dto.user.UserDTO;
 import com.ultras.footbalticketsapp.model.User;
@@ -61,6 +62,11 @@ public class UserController {
     @PutMapping("/{userId}")
     public User updateUser(@PathVariable("userId") UserDTO userDTO){
         return userService.updateUser(userDTO);
+    }
+
+    @PutMapping("/new-password")
+    public boolean updatePassword(@RequestBody NewPasswordDTO newPasswordDTO){
+        return userService.updatePassword(newPasswordDTO);
     }
 
     @GetMapping("/token/refresh")

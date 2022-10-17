@@ -53,10 +53,16 @@ export default function ProfilePageLayout() {
     const handleUpdatePasswordSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const object = {
+            id: user.id,
+            current_password: data.get("current_password"),
+            new_password: data.get("new_password")
+        }
+        userService.updatePassword(object).then((res) => {
+            console.log("nice");
+        }).catch((err) => {
+            console.log(err);
+        })
     };
     
     return (
@@ -143,7 +149,7 @@ export default function ProfilePageLayout() {
                                 <Typography component="h1" variant="h4" sx={{mt: 5,mb: 2}}>
                                     Change Password
                                 </Typography>
-                                <Box component="form" onSubmit={handleUpdatePasswordSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
+                                <Box component="form" onSubmit={handleUpdatePasswordSubmit} sx={{ mt: 1,mr: 25,ml: 25 }}>
                                     <TextField
                                         margin="normal"
                                         required
