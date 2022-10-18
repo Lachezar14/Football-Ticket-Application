@@ -35,4 +35,11 @@ test:
   stage: test 
   script:
       - cd football-tickets-app
-      - ./gradlew test  
+      - ./gradlew test
+
+sonarqube:
+  stage: test
+  script:
+      - cd football-tickets-app
+      - ./gradlew sonarqube
+
