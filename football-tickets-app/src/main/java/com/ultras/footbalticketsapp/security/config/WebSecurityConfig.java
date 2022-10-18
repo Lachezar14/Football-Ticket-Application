@@ -76,12 +76,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    //Custom CORS configuration
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
-        configuration.setAllowedOriginPatterns(Arrays.asList("*")); //TODO: change to specific origins (uncomment upper line, comment this line)
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //this is the url of the React app
+        //configuration.setAllowedOriginPatterns(Arrays.asList("*")); //this allows all origins
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("*"));

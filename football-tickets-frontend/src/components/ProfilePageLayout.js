@@ -49,6 +49,11 @@ export default function ProfilePageLayout() {
             password: data.get('password'),
         });
     };
+    
+    const handleLogOutSubmit = (event) => {
+        localStorage.removeItem("user");
+        window.location.href = "/";
+    };
 
     const handleUpdatePasswordSubmit = (event) => {
         event.preventDefault();
@@ -129,9 +134,17 @@ export default function ProfilePageLayout() {
                                     type="submit"
                                     fullWidth
                                     variant="contained"
-                                    sx={{ mt: 3, mb: 7 }}
+                                    sx={{ mt: 3, mb: 2}}
                                 >
                                     Update Profile
+                                </Button>
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    onClick={handleLogOutSubmit}
+                                    sx={{mb: 7}}
+                                >
+                                    Log Out
                                 </Button>
                             </Box>
                         </Box>
@@ -208,13 +221,13 @@ export default function ProfilePageLayout() {
                                             color="text.secondary"
                                             gutterBottom
                                         >
-                                            {ticket.match.date}
+                                            {new Date(ticket.match.date).toLocaleDateString()}
                                         </Typography>
                                         <Typography variant="h4" component="div">
                                             {ticket.match.home_team.name} vs {ticket.match.away_team.name}
                                         </Typography>
                                         <Typography sx={{mb: 1.5}} color="text.secondary">
-                                            4:30 PM
+                                            {new Date(ticket.match.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                         </Typography>
                                         <Typography sx={{mb: 1.5}} color="text.secondary">
                                             Stadium : {ticket.match.home_team.stadium.name}

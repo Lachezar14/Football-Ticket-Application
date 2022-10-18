@@ -13,13 +13,9 @@ import com.ultras.footbalticketsapp.model.Role;
 import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.repository.RoleRepository;
 import com.ultras.footbalticketsapp.repository.UserRepository;
-import com.ultras.footbalticketsapp.security.config.EmailValidator;
 import com.ultras.footbalticketsapp.serviceInterface.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,14 +39,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, EmailValidator emailValidator, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.emailValidator = emailValidator;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
