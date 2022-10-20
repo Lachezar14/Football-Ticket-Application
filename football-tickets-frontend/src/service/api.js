@@ -24,7 +24,8 @@ const login = (data) => {
             if (response.data.access_token) {
                 const info = jwt_decode(response.data.access_token);
                 userService.getUserByEmail(info.sub).then((response) => {
-                    localStorage.setItem("user", JSON.stringify(response.data));
+                    //localStorage.setItem("user", JSON.stringify(response.data));
+                    sessionStorage.setItem("user", JSON.stringify(response.data));
                     //console.log(response.data);})
             })} else {
                 console.warn("No tokens in response");
@@ -53,7 +54,8 @@ const login = (data) => {
  * @returns {UserLoginDto}
  */
 const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user")) || null;
+    //return JSON.parse(localStorage.getItem("user")) || null;
+    return JSON.parse(sessionStorage.getItem("user")) || null;
 };
 
 const isAuthenticated = () => {
