@@ -5,10 +5,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ultras.footbalticketsapp.dto.user.NewPasswordDTO;
-import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
-import com.ultras.footbalticketsapp.dto.user.UserDTO;
+import com.ultras.footbalticketsapp.controller.user.NewPasswordRequest;
+import com.ultras.footbalticketsapp.controller.user.RegisterUserRequest;
+import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
+import com.ultras.footbalticketsapp.controller.user.UserDTO;
 import com.ultras.footbalticketsapp.mapper.UserMapper;
+import com.ultras.footbalticketsapp.model.AccountType;
 import com.ultras.footbalticketsapp.model.Role;
 import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.repository.RoleRepository;
@@ -27,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -51,14 +52,42 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public UserDTO registerUser(RegisterUserRequest user) {
+        User userEmail = userRepository.findByEmail(user.getEmail());
+        if(userEmail != null){
+            throw new RuntimeException("Email already in use");
+        }
+        User newUser = userMapper.registerUserRequestToUser(user);
+        newUser.setRole(AccountType.valueOf(user.getRoleName()));
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        userRepository.save(newUser);
+        return userMapper.userToUserDTO(newUser);
+    }
+
+    //TODO remove because user has enum not role class
+    @Override
     public Role saveRole(Role role) {
         return roleRepository.save(role);
     }
 
     @Override
-    public void addRoleToUser(User user, String roleName) {
-        Role role = roleRepository.findByName(roleName);
-        user.getRoles().add(role);
+    public void makeUserAdmin(UserDTO user) {
+        User userToUpdate = userRepository.findById(user.getId()).orElse(null);
+        if(userToUpdate == null){
+            throw new RuntimeException("User not found");
+        }
+        userToUpdate.setRole(AccountType.ADMIN);
+        userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public UserDTO getUserById(int userId) {
+        return userMapper.userToUserDTO(userRepository.findById(userId).orElse(null));
+    }
+
+    @Override
+    public UserDTO getUserByEmail(String email) {
+        return userMapper.userToUserDTO(userRepository.findByEmail(email));
     }
 
     @Override
@@ -68,77 +97,60 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UsernameNotFoundException("User not found in the database");
         }
 
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        /*Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
+        });*/
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+
         return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),authorities);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userMapper.usersToUsersDTO(userRepository.findAll());
+    }
+
+    @Override
+    public UserDTO updateUser(UpdateUserRequest updateUserRequest) {
+        User userToUpdate = userRepository.findById(updateUserRequest.getId()).orElse(null);
+        if(userToUpdate == null){
+            throw new RuntimeException("User not found");
+        }
+        userToUpdate.setFirst_name(updateUserRequest.getFirst_name());
+        userToUpdate.setLast_name(updateUserRequest.getLast_name());
+        userToUpdate.setPhone_number(updateUserRequest.getPhone_number());
+        userToUpdate.setEmail(updateUserRequest.getEmail());
+        userRepository.save(userToUpdate);
+        return userMapper.userToUserDTO(userToUpdate);
+    }
+
+    @Override
+    public boolean updatePassword(NewPasswordRequest newPasswordRequest) {
+        User user = userRepository.findById(newPasswordRequest.getId()).orElse(null);
+        if(user == null){
+            throw new RuntimeException("User not found");
+        }
+        if(bCryptPasswordEncoder.matches(newPasswordRequest.getCurrent_password(), user.getPassword())){
+            user.setPassword(bCryptPasswordEncoder.encode(newPasswordRequest.getNew_password()));
+            userRepository.save(user);
+            return true;
+        }
+        else
+        {
+            throw new RuntimeException("Wrong password");
+        }
     }
 
     @Override
     public void deleteUserById(int userId) {
         User user = userRepository.findById(userId).orElse(null);
+        if(user == null){
+            throw new RuntimeException("User not found");
+        }
         userRepository.delete(user);
     }
-
-    @Override
-    public User saveUser(NewUserDTO user) {
-        User userEmail = userRepository.findByEmail(user.getEmail());
-        if(userEmail != null){
-            throw new RuntimeException("Email already in use");
-        }
-        User newUser = userMapper.newUserDTOtoUser(user);
-        addRoleToUser(newUser, user.getRoleName());
-        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        return userRepository.save(newUser);
-    }
-
-    @Override
-    public User getUserById(int userId) {
-        return userRepository.findById(userId).orElse(null);
-    }
-
-    @Override
-    public UserDTO getUserByEmail(String email) {
-        return userMapper.userToUserDTO(userRepository.findByEmail(email));
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User updateUser(UserDTO userDTO) {
-        User user = userMapper.userDTOtoUser(userDTO);
-        User userToUpdate = userRepository.findById(user.getId()).orElse(null);
-        if(userToUpdate != null){
-            userToUpdate.setFirst_name(user.getFirst_name());
-            userToUpdate.setLast_name(user.getLast_name());
-            userToUpdate.setPhone_number(user.getPhone_number());
-            userToUpdate.setEmail(user.getEmail());
-            userToUpdate.setRoles(user.getRoles());
-        }
-        return userRepository.save(userToUpdate);
-    }
-
-    @Override
-    public boolean updatePassword(NewPasswordDTO newPasswordDTO) {
-        User user = userRepository.findById(newPasswordDTO.getId()).orElse(null);
-        if(user != null){
-            if(bCryptPasswordEncoder.matches(newPasswordDTO.getCurrent_password(), user.getPassword())){
-                user.setPassword(bCryptPasswordEncoder.encode(newPasswordDTO.getNew_password()));
-                userRepository.save(user);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //@Override
-    //public UserDTO getUserDTO(String email) {
-    //    return userMapper.userToUserDTO(userRepository.findByEmail(email));
-    //}
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -155,7 +167,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                         .withSubject(user.getEmail())
                         .withExpiresAt(new java.sql.Date(System.currentTimeMillis() + 10 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                        //.withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                        .withClaim("role", user.getRole().toString())
                         .sign(algorithm);
 
                 Map<String, String> tokens = new HashMap<>();

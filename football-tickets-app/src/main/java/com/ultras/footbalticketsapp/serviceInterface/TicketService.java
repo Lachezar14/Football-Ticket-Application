@@ -1,14 +1,15 @@
 package com.ultras.footbalticketsapp.serviceInterface;
 
-import com.ultras.footbalticketsapp.model.Ticket;
+import com.ultras.footbalticketsapp.controller.ticket.BuyTicketRequest;
+import com.ultras.footbalticketsapp.controller.ticket.TicketResponse;
 
 import java.util.List;
 
 public interface TicketService {
-    Ticket saveTicket(Ticket ticket);
-    Ticket getTicketById(int id);
+    TicketResponse buyTicket(BuyTicketRequest ticket);
+    TicketResponse getTicketById(int id);
     //List<Ticket> getTicketsByMatchId(int matchId);
-    List<Ticket> getTicketsByUserId(int userId);
-    Ticket updateTicket(Ticket ticket);
+    List<TicketResponse> getTicketsByUserId(int userId);
+    TicketResponse updateTicket(TicketResponse ticket);
     void deleteTicket(int id);
 }

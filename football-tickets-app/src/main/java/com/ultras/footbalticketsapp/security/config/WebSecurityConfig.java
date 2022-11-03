@@ -4,13 +4,10 @@ import com.ultras.footbalticketsapp.security.AuthenticationFilter;
 import com.ultras.footbalticketsapp.security.AuthorizationFilter;
 import com.ultras.footbalticketsapp.security.CustomAuthenticationFailureHandler;
 import com.ultras.footbalticketsapp.service.UserServiceImpl;
-import com.ultras.footbalticketsapp.serviceInterface.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -18,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -55,8 +51,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**","/api/register/**", "/api/token/refresh/**", "/api/data", "/matches/**", "/teams/**", "/tickets/**",
                "/api/users","/api/**", "/api/statistics").permitAll();
-        http.authorizeRequests().antMatchers( "/api/user/**").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers( "/api/admin/**").hasAnyAuthority("ROLE_ADMIN");
+        //http.authorizeRequests().antMatchers( "/api/user/**").hasAnyAuthority("ROLE_USER");
+        //http.authorizeRequests().antMatchers( "/api/admin/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers( "/api/user/**").hasAnyAuthority("USER");
+        http.authorizeRequests().antMatchers( "/api/admin/**").hasAnyAuthority("ADMIN");
 ;
 
         http.authorizeRequests().anyRequest().authenticated();

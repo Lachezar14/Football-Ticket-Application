@@ -23,13 +23,14 @@ public class User{
     private String phone_number;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private AccountType role;
 
-    @OneToMany
-    @JsonIgnore
-    @JoinColumn(name = "buyer_id", referencedColumnName = "id")
-    List<Ticket> tickets = new ArrayList<>();
+   // @OneToMany
+   // @JsonIgnore
+   // @JoinColumn(name = "buyer_id", referencedColumnName = "id")
+   // List<Ticket> tickets = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
-
+    //@ManyToMany(fetch = FetchType.EAGER)
+    //private Collection<Role> roles = new ArrayList<>();
 }

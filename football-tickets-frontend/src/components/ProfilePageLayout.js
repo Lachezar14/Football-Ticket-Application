@@ -51,7 +51,7 @@ export default function ProfilePageLayout() {
     };
     
     const handleLogOutSubmit = (event) => {
-        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
         window.location.href = "/";
     };
 

@@ -1,7 +1,8 @@
 package com.ultras.footbalticketsapp.controller;
 
+import com.ultras.footbalticketsapp.controller.match.MatchResponse;
+import com.ultras.footbalticketsapp.controller.match.NewMatchRequest;
 import com.ultras.footbalticketsapp.model.Match;
-import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,29 +25,29 @@ public class MatchController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Match> saveMatch(@RequestBody Match match){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/add").toUriString());
+    public ResponseEntity<MatchResponse> saveMatch(@RequestBody NewMatchRequest match) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/matches/").toUriString());
         return ResponseEntity.created(uri).body(matchService.saveMatch(match));
     }
 
     @GetMapping("/{matchId}")
-    public ResponseEntity<Match> getMatch(@PathVariable("matchId") int matchId){
+    public ResponseEntity<MatchResponse> getMatchById(@PathVariable("matchId") int matchId){
         return ResponseEntity.ok().body(matchService.getMatchById(matchId));
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Match>> getAllMatches(){
+    public ResponseEntity<List<MatchResponse>> getAllMatches(){
         return ResponseEntity.ok().body(matchService.getAllMatches());
+    }
+
+    @PutMapping("/{matchId}")
+    public ResponseEntity<MatchResponse> updateMatch(@PathVariable("matchId") MatchResponse match){
+        return ResponseEntity.ok().body(matchService.updateMatch(match));
     }
 
     @DeleteMapping("/{matchId}")
     public String deleteMatch(@PathVariable("matchId") int matchId){
         matchService.deleteMatchById(matchId);
         return "Match deleted successfully";
-    }
-
-    @PutMapping("/{matchId}")
-    public Match updateMatch(@PathVariable("matchId") Match match){
-        return matchService.updateMatch(match);
     }
 }

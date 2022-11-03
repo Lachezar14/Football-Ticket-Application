@@ -17,12 +17,12 @@ const pages =
     (() => {
         if (Api.isAuthenticated()) {
             const user = Api.getCurrentUser();
-            if (user.roles.some(role => role.name === 'ROLE_USER')) {
+            if (user.role === 'USER') {
                 return (
                         [{name: 'Home', href: '/'},
                         {name: 'Matches', href: '/matches'},
                         {name: 'Profile', href: '/profile'}])
-            } else if (user.roles.some(role => role.name === 'ROLE_ADMIN')) {
+            } else if (user.role === 'ADMIN') {
                 return (
                         [{name: 'Home', href: '/'},
                         {name: 'Matches', href: '/matches'},

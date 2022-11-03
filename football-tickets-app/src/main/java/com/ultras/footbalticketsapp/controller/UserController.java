@@ -1,9 +1,9 @@
 package com.ultras.footbalticketsapp.controller;
 
-import com.ultras.footbalticketsapp.dto.user.NewPasswordDTO;
-import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
-import com.ultras.footbalticketsapp.dto.user.UserDTO;
-import com.ultras.footbalticketsapp.model.User;
+import com.ultras.footbalticketsapp.controller.user.NewPasswordRequest;
+import com.ultras.footbalticketsapp.controller.user.RegisterUserRequest;
+import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
+import com.ultras.footbalticketsapp.controller.user.UserDTO;
 import com.ultras.footbalticketsapp.serviceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,14 +32,19 @@ public class UserController {
 
     @PostMapping("/register")
 //    public ResponseEntity<RegisterUserResponse> saveUser(@RequestBody RegisterUserRequest user) {
-    public ResponseEntity<User> saveUser(@Valid @RequestBody NewUserDTO user) {
-        User savedUser = userService.saveUser(user);
+    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody RegisterUserRequest user) {
+        UserDTO savedUser = userService.registerUser(user);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + savedUser.getId()).toUriString());
         return ResponseEntity.created(uri).body(savedUser);
     }
 
+    @PostMapping("/admin")
+    public void makeUserAdmin(@RequestBody UserDTO user) {
+        userService.makeUserAdmin(user);
+    }
+
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable("userId") int userId){
+    public ResponseEntity<UserDTO> getUserById(@PathVariable("userId") int userId){
         return ResponseEntity.ok().body(userService.getUserById(userId));
     }
 
@@ -49,8 +54,18 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
         return ResponseEntity.ok().body(userService.getAllUsers());
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
+        return ResponseEntity.ok().body(userService.updateUser(updateUserRequest));
+    }
+
+    @PutMapping("/new-password")
+    public boolean updatePassword(@RequestBody NewPasswordRequest newPasswordRequest){
+        return userService.updatePassword(newPasswordRequest);
     }
 
     @DeleteMapping("/{userId}")
@@ -59,20 +74,8 @@ public class UserController {
         return "User deleted successfully";
     }
 
-    @PutMapping("/{userId}")
-    public User updateUser(@PathVariable("userId") UserDTO userDTO){
-        return userService.updateUser(userDTO);
-    }
-
-    @PutMapping("/new-password")
-    public boolean updatePassword(@RequestBody NewPasswordDTO newPasswordDTO){
-        return userService.updatePassword(newPasswordDTO);
-    }
-
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         userService.refreshToken(request, response);
     }
-
-
 }

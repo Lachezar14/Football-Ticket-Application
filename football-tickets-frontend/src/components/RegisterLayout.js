@@ -46,7 +46,7 @@ export default function RegisterPage() {
             phone_number: data.get('phone_number'),
             email: data.get('email'),
             password: data.get('password'),
-            roleName: "ROLE_USER"
+            roleName: "USER"
         };
         
         //data.forEach((value, key) => {object[key] = value});
@@ -60,7 +60,7 @@ export default function RegisterPage() {
         })
             .catch((err) => {
                 setRegSuccess(false);
-                setErrorMessage(err.response.data.error);
+                setErrorMessage(err.response.data.message);
         });
     };
 

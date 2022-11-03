@@ -33,8 +33,4 @@ public class Match {
     private Date date;
     private int ticket_number;
     private double ticket_price;
-
-    //@OneToMany
-    //List<Ticket> tickets = new ArrayList<>();
-
 }

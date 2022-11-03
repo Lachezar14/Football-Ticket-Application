@@ -1,11 +1,16 @@
 package com.ultras.footbalticketsapp.controller;
 
+import com.ultras.footbalticketsapp.controller.footballTeam.FootballTeamResponse;
+import com.ultras.footbalticketsapp.controller.footballTeam.NewFootballTeamRequest;
 import com.ultras.footbalticketsapp.model.FootballTeam;
 import com.ultras.footbalticketsapp.model.Stadium;
 import com.ultras.footbalticketsapp.serviceInterface.FootballTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,24 +26,25 @@ public class FootballTeamController {
     }
 
     @PostMapping("/add")
-    public String saveFootballTeam(@RequestBody FootballTeam footballTeam){
-        footballTeamService.saveFootballTeam(footballTeam);
-        return "Football team saved successfully";
+    public ResponseEntity<FootballTeamResponse> saveFootballTeam(@RequestBody NewFootballTeamRequest newFootballTeamRequest) {
+        FootballTeamResponse savedTeam = footballTeamService.saveFootballTeam(newFootballTeamRequest);
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/teams/" + savedTeam.getId()).toUriString());
+        return ResponseEntity.created(uri).body(savedTeam);
     }
 
     @GetMapping("/{teamId}")
-    public FootballTeam getFootballTeam(@PathVariable("teamId") int teamId){
-        return footballTeamService.getFootballTeamById(teamId);
+    public ResponseEntity<FootballTeamResponse> getFootballTeamById(@PathVariable("teamId") int teamId){
+        return ResponseEntity.ok().body(footballTeamService.getFootballTeamById(teamId));
     }
 
     @GetMapping("/")
-    public List<FootballTeam> getAllFootballTeams(){
-        return footballTeamService.getAllFootballTeams();
+    public ResponseEntity<List<FootballTeamResponse>> getAllFootballTeams(){
+        return ResponseEntity.ok().body(footballTeamService.getAllFootballTeams());
     }
 
     @PutMapping("/{teamId}")
-    public FootballTeam updateFootballTeam(@PathVariable("teamId") FootballTeam team){
-        return footballTeamService.updateFootballTeam(team);
+    public ResponseEntity<FootballTeamResponse> updateFootballTeam(@PathVariable("teamId") FootballTeamResponse team){
+        return ResponseEntity.ok().body(footballTeamService.updateFootballTeam(team));
     }
 
     @DeleteMapping("/{teamId}")
@@ -47,12 +53,14 @@ public class FootballTeamController {
         return "Football team deleted successfully";
     }
 
+    //TODO remove because is in saveTeam method
     @PostMapping("/stadium")
     public String saveStadium(Stadium stadium){
         footballTeamService.saveStadium(stadium);
         return "Stadium saved successfully";
     }
 
+    //TODO remove because is not used
     @GetMapping("/stadium/{stadiumId}")
     public Stadium getStadium(@PathVariable("stadiumId") int stadiumId){
         return footballTeamService.getStadiumById(stadiumId);

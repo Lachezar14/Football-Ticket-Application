@@ -19,7 +19,25 @@ const saveTeam = async (team) => {
     }
 }
 
+const updateTeam = async (team) => {
+    try{
+        return await axios.put(`${teamsURL}/${team.id}`, team);
+    }catch (error) {
+        console.log('Error while calling updateTeam service ', error);
+    }
+}
+
+const deleteTeam = async (id) => {
+    try{
+        return await axios.delete(`${teamsURL}/${id}`);
+    }catch (error) {
+        console.log('Error while calling deleteTeam service ', error);
+    }
+}
+
 export default {
     getTeams,
-    saveTeam
+    saveTeam,
+    deleteTeam,
+    updateTeam
 }

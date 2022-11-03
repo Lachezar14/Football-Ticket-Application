@@ -1,10 +1,14 @@
 package com.ultras.footbalticketsapp.controller;
 
-import com.ultras.footbalticketsapp.model.Ticket;
+import com.ultras.footbalticketsapp.controller.ticket.BuyTicketRequest;
+import com.ultras.footbalticketsapp.controller.ticket.TicketResponse;
 import com.ultras.footbalticketsapp.serviceInterface.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,14 +24,15 @@ public class TicketController {
     }
 
     @PostMapping("/add")
-    public String saveTicket(@RequestBody Ticket ticket){
-        ticketService.saveTicket(ticket);
-        return "Ticket saved successfully";
+    public ResponseEntity<TicketResponse> saveTicket(@RequestBody BuyTicketRequest ticket){
+        TicketResponse savedTicket = ticketService.buyTicket(ticket);
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/tickets/" + savedTicket.getId()).toUriString());
+        return ResponseEntity.created(uri).body(savedTicket);
     }
 
     @GetMapping("/{ticketId}")
-    public Ticket getTicket(@PathVariable("ticketId") int ticketId){
-        return ticketService.getTicketById(ticketId);
+    public ResponseEntity<TicketResponse> getTicketById(@PathVariable("ticketId") int ticketId){
+        return ResponseEntity.ok().body(ticketService.getTicketById(ticketId));
     }
 
     /*@GetMapping("/matchTickets")
@@ -36,15 +41,17 @@ public class TicketController {
     }*/
 
     @GetMapping("/user/{userId}")
-    public List<Ticket> getTicketsByUserId(@PathVariable("userId") int userId){
-        return ticketService.getTicketsByUserId(userId);
+    public ResponseEntity<List<TicketResponse>> getTicketsByUserId(@PathVariable("userId") int userId){
+        return ResponseEntity.ok().body(ticketService.getTicketsByUserId(userId));
     }
 
+    //TODO delete because ticket info should not be updated
     @PutMapping("/{ticketId}")
-    public Ticket updateTicket(@PathVariable("ticketId") Ticket ticket){
-        return ticketService.updateTicket(ticket);
+    public ResponseEntity<TicketResponse> updateTicket(@PathVariable("ticketId") TicketResponse ticket){
+        return ResponseEntity.ok().body(ticketService.updateTicket(ticket));
     }
 
+    //TODO delete because ticket info should not be deleted
     @DeleteMapping("/{ticketId}")
     public String deleteTicket(@PathVariable("ticketId") int ticketId){
         ticketService.deleteTicket(ticketId);

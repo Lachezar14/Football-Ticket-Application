@@ -1,5 +1,6 @@
-package com.ultras.footbalticketsapp.dto.user;
+package com.ultras.footbalticketsapp.controller.user;
 
+import com.ultras.footbalticketsapp.model.AccountType;
 import com.ultras.footbalticketsapp.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class UserDTO {
     private String last_name;
     private String phone_number;
     private String email;
-    private List<Role> roles;
+    //private List<Role> roles;
+    private AccountType role;
 }

@@ -1,10 +1,10 @@
 package com.ultras.footbalticketsapp.serviceInterface;
 
-import com.ultras.footbalticketsapp.dto.user.NewPasswordDTO;
-import com.ultras.footbalticketsapp.dto.user.NewUserDTO;
-import com.ultras.footbalticketsapp.dto.user.UserDTO;
+import com.ultras.footbalticketsapp.controller.user.NewPasswordRequest;
+import com.ultras.footbalticketsapp.controller.user.RegisterUserRequest;
+import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
+import com.ultras.footbalticketsapp.controller.user.UserDTO;
 import com.ultras.footbalticketsapp.model.Role;
-import com.ultras.footbalticketsapp.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,15 +12,14 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
-    User saveUser(NewUserDTO user);
+    UserDTO registerUser(RegisterUserRequest user);
     Role saveRole(Role role);
-    void addRoleToUser(User user, String roleName);
+    void makeUserAdmin(UserDTO user);
+    UserDTO getUserById(int userId);
     UserDTO getUserByEmail(String email);
-    User getUserById(int userId);
-    List<User> getAllUsers();
+    List<UserDTO> getAllUsers();
+    UserDTO updateUser(UpdateUserRequest updateUserRequest);
+    boolean updatePassword(NewPasswordRequest newPasswordRequest);
     void deleteUserById(int userId);
-    User updateUser(UserDTO userDTO);
-    //UserDTO getUserDTO(String email);
-    boolean updatePassword(NewPasswordDTO newPasswordDTO);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }
