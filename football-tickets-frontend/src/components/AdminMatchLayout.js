@@ -19,6 +19,7 @@ import Api from "../service/api";
 import {useEffect, useState} from "react";
 import teamsService from "../service/teamsService";
 import matchService from "../service/matchService";
+import {Link} from "react-router-dom";
 
 
 export default function AdminMatchLayout() {
@@ -36,11 +37,16 @@ export default function AdminMatchLayout() {
     const [homeTeam, setHomeTeam] = React.useState('');
     const [awayTeam, setAwayTeam] = React.useState('');
     const [date, setDate] = React.useState(dayjs());
-    const [match, setMatch] = React.useState([]);
+    const [newMatch, setNewMatch] = React.useState([]);
+    const [updateMatch, setUpdateMatch] = React.useState([]);
 
     const matchHandleChange = (event) => {
-        setMatch(event.target.value);
+        setNewMatch(event.target.value);
     };
+
+    const updateMatchHandleChange = (event) => {
+        setUpdateMatch(event.target.value);
+    }
 
     const homeTeamHandleChange = (event) => {
         setHomeTeam(event.target.value);
@@ -103,7 +109,7 @@ export default function AdminMatchLayout() {
     const handleDeleteMatchSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const ID = match.id;
+        const ID = newMatch.id;
         console.log(ID);
         matchService.deleteMatch(ID).then((response) => {
             console.log("Match deleted successfully", response.data);
@@ -112,7 +118,23 @@ export default function AdminMatchLayout() {
 
 
     return (
-        <Box sx={{ flexGrow: 1,mt: 15,ml: 5,mr: 5 }}>
+        <Box sx={{ flexGrow: 1,mt: 7,ml: 5,mr: 5 }}>
+            <Box
+                sx={{
+                    mb: 7,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <Button component={Link}
+                        to={"/admin"}
+                        variant="contained"
+                        size='large'
+                        style={{width: '200px'}}
+                >
+                    Go Back
+                </Button>
+            </Box>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
                     <Card sx={{
@@ -222,7 +244,7 @@ export default function AdminMatchLayout() {
                                         fullWidth
                                         select
                                         label="Available Matches"
-                                        value={match}
+                                        value={newMatch}
                                         onChange={matchHandleChange}
                                     >
                                         {matches.map((match) => (
@@ -265,8 +287,9 @@ export default function AdminMatchLayout() {
                                     fullWidth
                                     select
                                     label="Available Matches"
-                                    value={match}
-                                    onChange={matchHandleChange}
+                                    //defaultValue={updateMatch}
+                                    value={updateMatch}
+                                    onChange={updateMatchHandleChange}
                                     sx={{mb: 10}}
                                 >
                                     {matches.map((match) => (
@@ -294,7 +317,9 @@ export default function AdminMatchLayout() {
                                     fullWidth
                                     select
                                     label="Home Team"
-                                    value={homeTeam}
+                                    key={updateMatch.home_team}
+                                    defaultValue={updateMatch.home_team}
+                                    //value={homeTeam}
                                     onChange={homeTeamHandleChange}
                                     sx={{mt: 3}}
                                 >
@@ -311,7 +336,8 @@ export default function AdminMatchLayout() {
                                     fullWidth
                                     select
                                     label="Away Team"
-                                    value={awayTeam}
+                                    defaultValue={updateMatch.away_team}
+                                    //value={awayTeam}
                                     onChange={awayTeamHandleChange}
                                 >
                                     {teams.map((team) => (
@@ -326,6 +352,8 @@ export default function AdminMatchLayout() {
                                     fullWidth
                                     label="Tickets Amount"
                                     name="tickets_number"
+                                    key={updateMatch.ticket_number}
+                                    defaultValue={updateMatch.ticket_number}
                                     autoComplete="tickets-number"
                                     autoFocus
                                 />
@@ -335,6 +363,8 @@ export default function AdminMatchLayout() {
                                     fullWidth
                                     label="Ticket Price"
                                     name="ticket_price"
+                                    key={updateMatch.ticket_price}
+                                    defaultValue={updateMatch.ticket_price}
                                     autoComplete="price"
                                     autoFocus
                                 />

@@ -30,7 +30,7 @@ const login = (data) => {
             })} else {
                 console.warn("No tokens in response");
             }
-            return response.data;
+            return response.data.access_token;
         });
 }
 

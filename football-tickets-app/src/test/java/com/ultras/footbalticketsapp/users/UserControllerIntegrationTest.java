@@ -117,7 +117,7 @@ public class UserControllerIntegrationTest {
 
         doNothing().when(userService).makeUserAdmin((UserDTO) any());
 
-        mockMvc.perform(post("/api/admin")
+        mockMvc.perform(put("/api/admin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
                         .andExpect(MockMvcResultMatchers.status().isOk());

@@ -21,7 +21,7 @@ const saveTeam = async (team) => {
 
 const updateTeam = async (team) => {
     try{
-        return await axios.put(`${teamsURL}/${team.id}`, team);
+        return await axios.put(`${teamsURL}/update`, team);
     }catch (error) {
         console.log('Error while calling updateTeam service ', error);
     }

@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import {useEffect, useState} from "react";
 import teamsService from "../service/teamsService";
+import {Link} from "react-router-dom";
 
 
 export default function AdminTeamLayout() {
@@ -18,28 +19,12 @@ export default function AdminTeamLayout() {
         teamsService.getTeams().then(res => setTeams(res.data));
     },  []);
 
-
     const [team, setTeam] = React.useState('');
-    //const [awayTeam, setAwayTeam] = React.useState('');
-    //const [date, setDate] = React.useState(dayjs());
-    //const [match, setMatch] = React.useState([]);
-
-    // const matchHandleChange = (event) => {
-    //     setMatch(event.target.value);
-    // };
+    console.log(team);
 
     const teamHandleChange = (event) => {
         setTeam(event.target.value);
     };
-
-    // const awayTeamHandleChange = (event) => {
-    //     setAwayTeam(event.target.value);
-    // };
-    //
-    //
-    // const dateHandleChange = (newValue) => {
-    //     setDate(newValue);
-    // };
 
     const handleDeleteTeamSubmit = (event) => {
         event.preventDefault();
@@ -52,7 +37,23 @@ export default function AdminTeamLayout() {
     };
 
     const handleUpdateTeamSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
 
+        const updatedTeam = {
+            id: team.id,
+            name : data.get("name"),
+            stadium : {
+                id: team.stadium.id,
+                name : data.get("stadium"),
+                capacity : data.get("capacity")
+            }
+        };
+        console.log(updatedTeam);
+        teamsService.updateTeam(updatedTeam).then((response) => {
+            console.log("Team updated successfully", response.data);
+            window.location.reload();
+        })
     };
 
     const handleNewTeamSubmit = (event) => {
@@ -74,7 +75,23 @@ export default function AdminTeamLayout() {
 
 
     return (
-        <Box sx={{ flexGrow: 1,mt: 15,ml: 5,mr: 5 }}>
+        <Box sx={{ flexGrow: 1,mt: 7,ml: 5,mr: 5 }}>
+            <Box
+                sx={{
+                    mb: 7,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <Button component={Link}
+                        to={"/admin"}
+                        variant="contained"
+                        size='large'
+                        style={{width: '200px'}}
+                >
+                    Go Back
+                </Button>
+            </Box>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
                     <Card sx={{
@@ -143,6 +160,7 @@ export default function AdminTeamLayout() {
                                 </Typography>
                                 <Box component="form" onSubmit={handleDeleteTeamSubmit} noValidate>
                                     <TextField
+                                        sx={{display: 'flex', justifyContent: 'center', width: '300px'}}
                                         margin="normal"
                                         id="outlined-select-currency"
                                         required
@@ -187,10 +205,33 @@ export default function AdminTeamLayout() {
                             <Box component="form" onSubmit={handleUpdateTeamSubmit}  sx={{ mt: 1,mr: 25,ml: 25 }}>
                                 <TextField
                                     margin="normal"
+                                    id="outlined-select-currency"
+                                    required
+                                    fullWidth
+                                    select
+                                    label="Available Teams"
+                                    value={team}
+                                    onChange={teamHandleChange}
+                                    sx={{mb: 10}}
+                                >
+                                    {teams.map((team) => (
+                                        <MenuItem key={team.id} value={team}>
+                                            {team.name}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                                <TextField
+                                    margin="normal"
                                     required
                                     fullWidth
                                     label="Team Name"
+                                    //InputLabelProps={{ shrink: true }}
                                     name="name"
+                                    //key={team ? team.name :""}
+                                    key={team.name}
+                                    defaultValue={team.name}
+                                    //defaultValue={team ? team.name :""}
+                                    //value={team.name}
                                     autoComplete="team-name"
                                     autoFocus
                                 />
@@ -200,6 +241,11 @@ export default function AdminTeamLayout() {
                                     fullWidth
                                     label="Stadium Name"
                                     name="stadium"
+                                    key={team ? team.stadium.name : 2}
+                                    //key={team.stadium.name}
+                                    //defaultValue={team.stadium.name}
+                                    defaultValue={team ? team.stadium.name : ""}
+                                    //value={team.stadium.name}
                                     autoComplete="stadium-name"
                                     autoFocus
                                 />
@@ -209,6 +255,11 @@ export default function AdminTeamLayout() {
                                     fullWidth
                                     label="Stadium Capacity"
                                     name="capacity"
+                                    key={team ? team.stadium.capacity : 1}
+                                    //key={team.stadium.capacity}
+                                    //defaultValue={team.stadium.capacity}
+                                    defaultValue={team ? team.stadium.capacity : ""}
+                                    //value={team.stadium.capacity}
                                     autoComplete="stadium-capacity"
                                     autoFocus
                                 />

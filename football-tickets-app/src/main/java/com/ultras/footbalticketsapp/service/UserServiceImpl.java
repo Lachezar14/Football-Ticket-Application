@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public List<UserDTO> getAllUsers() {
-        return userMapper.usersToUsersDTO(userRepository.findAll());
+        return userMapper.usersToUsersDTO(userRepository.findAllByRole(AccountType.USER));
     }
 
     @Override

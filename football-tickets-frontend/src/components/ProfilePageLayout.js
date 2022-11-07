@@ -44,9 +44,19 @@ export default function ProfilePageLayout() {
     const handleUpdateProfileSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+        const updateRequest = {
+            id: user.id,
+            first_name: data.get('first_name'),
+            last_name: data.get('last_name'),
+            phone_number: data.get('phone_number'),
+            email: data.get('username'),
+        }
+        userService.updateUser(updateRequest).then((response) => {
+            console.log("User updated successfully", response.data);
+            sessionStorage.setItem("user", JSON.stringify(response.data));
+            window.location.reload();
+        }).catch((err) => {
+            console.log(err);
         });
     };
     
@@ -65,6 +75,7 @@ export default function ProfilePageLayout() {
         }
         userService.updatePassword(object).then((res) => {
             console.log("nice");
+            window.location.reload();
         }).catch((err) => {
             console.log(err);
         })
@@ -96,7 +107,8 @@ export default function ProfilePageLayout() {
                                     fullWidth
                                     label="First Name"
                                     name="first_name"
-                                    value={user.first_name}
+                                    defaultValue={user.first_name}
+                                    //value={user.first_name}
                                     autoComplete="given-name"
                                     autoFocus
                                 />
@@ -106,7 +118,8 @@ export default function ProfilePageLayout() {
                                     fullWidth
                                     label="Last Name"
                                     name="last_name"
-                                    value={user.last_name}
+                                    defaultValue={user.last_name}
+                                    //value={user.last_name}
                                     autoComplete="family-name"
                                     autoFocus
                                 />
@@ -116,7 +129,8 @@ export default function ProfilePageLayout() {
                                     fullWidth
                                     label="Phone Number"
                                     name="phone_number"
-                                    value={user.phone_number}
+                                    defaultValue={user.phone_number}
+                                    //value={user.phone_number}
                                     autoComplete="phone-number"
                                     autoFocus
                                 />
@@ -126,7 +140,8 @@ export default function ProfilePageLayout() {
                                     fullWidth
                                     label="Email Address"
                                     name="username"
-                                    value={user.email}
+                                    defaultValue={user.email}
+                                    //value={user.email}
                                     autoComplete="username"
                                     autoFocus
                                 />

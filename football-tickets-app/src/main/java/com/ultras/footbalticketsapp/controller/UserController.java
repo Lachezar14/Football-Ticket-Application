@@ -38,7 +38,7 @@ public class UserController {
         return ResponseEntity.created(uri).body(savedUser);
     }
 
-    @PostMapping("/admin")
+    @PutMapping("/admin")
     public void makeUserAdmin(@RequestBody UserDTO user) {
         userService.makeUserAdmin(user);
     }

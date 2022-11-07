@@ -26,9 +26,10 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public MatchResponse saveMatch(NewMatchRequest newMatchRequest) {
         Match match = matchMapper.newMatchRequestToMatch(newMatchRequest);
-        if(matchRepository.findByHomeTeamAndAwayTeamAndDate(match.getHome_team().getId(), match.getAway_team().getId(), match.getDate()) != null){
-            throw new IllegalStateException("Match already exists");
-        }
+        //TODO throws query exception check query implementation
+//        if(matchRepository.findByHomeTeamAndAwayTeamAndDate(match.getHome_team().getId(), match.getAway_team().getId(), match.getDate()) != null){
+//            throw new IllegalStateException("Match already exists");
+//        }
         matchRepository.save(match);
         return matchMapper.matchToMatchResponse(match);
     }

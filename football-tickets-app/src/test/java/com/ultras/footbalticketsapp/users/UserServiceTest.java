@@ -187,7 +187,7 @@ class  UserServiceTest {
         //when
         userService.getAllUsers();
         //then
-        verify(userRepository).findAll();
+        verify(userRepository).findAllByRole(AccountType.USER);
     }
 
 

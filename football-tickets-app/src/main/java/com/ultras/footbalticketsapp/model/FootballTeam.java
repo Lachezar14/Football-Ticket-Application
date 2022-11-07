@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -23,5 +24,6 @@ public class FootballTeam {
 
     @OneToOne
     @JoinColumn(name = "stadium_id", referencedColumnName = "id")
+    //@Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     private Stadium stadium;
 }

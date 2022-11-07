@@ -42,8 +42,9 @@ public class FootballTeamController {
         return ResponseEntity.ok().body(footballTeamService.getAllFootballTeams());
     }
 
-    @PutMapping("/{teamId}")
-    public ResponseEntity<FootballTeamResponse> updateFootballTeam(@PathVariable("teamId") FootballTeamResponse team){
+    //TODO ask teacher about this how can i use the teamId in the url
+    @PutMapping("/update")
+    public ResponseEntity<FootballTeamResponse> updateFootballTeam(@RequestBody FootballTeamResponse team){
         return ResponseEntity.ok().body(footballTeamService.updateFootballTeam(team));
     }
 

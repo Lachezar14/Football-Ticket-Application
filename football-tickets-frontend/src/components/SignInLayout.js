@@ -47,10 +47,15 @@ export default function SignIn() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         api.login(data)
-            .then(() => {
+            .then(token => {
+                const decoded = jwt_decode(token);
+                console.log(decoded);
+                if (decoded.role.some(role => role === 'USER')) {
                 window.location.href = "/profile";
+                }else if (decoded.role.some(role => role === 'ADMIN'))  {
+                window.location.href = "/admin";
                 }
-            )
+            })
             .catch((err) => {
                 console.error(err);
                 setErrorMessage(err.response.data.error_message);

@@ -13,7 +13,7 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from "@mui/material/TextField";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Api from "../service/api";
 import jwt_decode from "jwt-decode";
 import userService from "../service/userService";
@@ -42,7 +42,7 @@ export default function Checkout() {
     console.log(match);
     
     //const [user, setUser] = React.useState([]);
-    
+    let navigate = useNavigate();
     const user = Api.getCurrentUser();
     console.log(user);
 
@@ -67,11 +67,14 @@ export default function Checkout() {
             match: match.match,
         };
         //console.log(ticket);
-
+        if(user != null){
          for (let i = 0; i < ticket_number; i++) {
             ticketService.buyTickets(ticket).then((res) => {
                 console.log(ticket);
             });
+         }
+        }else{
+            navigate('/login');
         }
     };
     return (
