@@ -12,5 +12,5 @@ public interface MatchService {
     List<MatchResponse> getAllMatches();
     MatchResponse updateMatch(MatchResponse match);
     void deleteMatchById(int matchId);
-    boolean TicketBought(int matchId);
+    void TicketBought(int matchId, int ticketAmount);
 }

@@ -12,9 +12,7 @@ import java.util.Date;
 @Repository
 public interface MatchRepository extends JpaRepository<Match, Integer> {
     @Query(
-            value = "SELECT * FROM matches m WHERE m.home_team_id = ?1" +
-                    "AND m.away_team_id = ?2" +
-                    "AND m.date = ?3",
+            value = "SELECT * FROM matches m WHERE m.home_team_id = ?1 AND m.away_team_id = ?2 AND m.date = ?3",
             nativeQuery = true)
     Match findByHomeTeamAndAwayTeamAndDate(int homeTeamId, int awayTeamId, Date date);
 }

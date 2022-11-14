@@ -34,6 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ContextConfiguration(classes = {UserServiceImpl.class, BCryptPasswordEncoder.class})
 @ExtendWith(SpringExtension.class)
+@Disabled
 class UserServiceImplTest {
     @MockBean
     private RoleRepository roleRepository;

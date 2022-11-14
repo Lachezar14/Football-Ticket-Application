@@ -30,7 +30,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     public FootballTeamResponse saveFootballTeam(NewFootballTeamRequest newFootballTeamRequest) {
         FootballTeam footballTeam = footballTeamMapper.newFootballTeamRequestToFootballTeam(newFootballTeamRequest);
         if(footballTeamRepository.findByName(footballTeam.getName()) != null){
-            throw new IllegalStateException("Team already exists");
+            throw new RuntimeException("Team already exists");
         }
         Stadium stadium = footballTeam.getStadium();
         stadiumRepository.save(stadium);
@@ -49,21 +49,15 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         return footballTeamMapper.footballTeamsToFootballTeamsResponse(footballTeamRepository.findAll());
     }
 
-    //TODO
-    // add updateStadium method and put it in the updateFootballTeam method
-    // cause im done with this stupid fucking language.
-    // I hate java so much and i hate spring boot even more
     @Override
     public FootballTeamResponse updateFootballTeam(FootballTeamResponse footballTeam) {
         FootballTeam toUpdate = footballTeamRepository.findById(footballTeam.getId()).orElse(null);
         FootballTeam updated = footballTeamMapper.footballTeamResponseToFootballTeam(footballTeam);
         if (toUpdate == null) {
-            throw new IllegalStateException("Team not found");
+            throw new RuntimeException("Team not found");
         }
         toUpdate.setName(updated.getName());
         updateStadium(updated.getStadium());
-        //toUpdate.setStadium(updated.getStadium());
-        //stadiumRepository.save(toUpdate.getStadium());
         footballTeamRepository.save(toUpdate);
         return footballTeamMapper.footballTeamToFootballTeamResponse(toUpdate);
     }
@@ -72,9 +66,8 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     public void deleteFootballTeam(int id) {
         FootballTeam footballTeam = footballTeamRepository.findById(id).orElse(null);
         if (footballTeam == null) {
-            throw new IllegalStateException("Team not found");
+            throw new RuntimeException("Team not found");
         }
-        //footballTeamRepository.deleteTeam(id);
         footballTeamRepository.delete(footballTeam);
         stadiumRepository.delete(footballTeam.getStadium());
     }
@@ -82,7 +75,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     public void updateStadium(Stadium stadium){
         Stadium toUpdate = stadiumRepository.findById(stadium.getId()).orElse(null);
         if (toUpdate == null) {
-            throw new IllegalStateException("Stadium not found");
+            throw new RuntimeException("Stadium not found");
         }
         toUpdate.setName(stadium.getName());
         toUpdate.setCapacity(stadium.getCapacity());
@@ -90,21 +83,21 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     //TODO remove because it is in the saveTeam method
-    @Override
-    public Stadium saveStadium(Stadium stadium) {
-        return stadiumRepository.save(stadium);
-    }
+//    @Override
+//    public Stadium saveStadium(Stadium stadium) {
+//        return stadiumRepository.save(stadium);
+//    }
 
     //TODO remove because it is not used
-    @Override
-    public Stadium getStadiumById(int id) {
-        return stadiumRepository.findById(id).orElse(null);
-    }
-
-    //TODO remove because it is redundant
-    @Override
-    public void deleteStadium(int id) {
-        Stadium stadium = stadiumRepository.findById(id).orElse(null);
-        stadiumRepository.delete(stadium);
-    }
+//    @Override
+//    public Stadium getStadiumById(int id) {
+//        return stadiumRepository.findById(id).orElse(null);
+//    }
+//
+//    //TODO remove because it is redundant
+//    @Override
+//    public void deleteStadium(int id) {
+//        Stadium stadium = stadiumRepository.findById(id).orElse(null);
+//        stadiumRepository.delete(stadium);
+//    }
 }

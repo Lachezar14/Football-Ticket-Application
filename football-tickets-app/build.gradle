@@ -1,8 +1,19 @@
 plugins {
+	id 'jacoco'
 	id 'org.springframework.boot' version '2.7.3'
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 	id 'java'
 	id "org.sonarqube" version "3.4.0.2513"
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+	}
+}
+test.finalizedBy jacocoTestReport
+tasks.named('sonarqube').configure {
+	dependsOn test
 }
 
 group = 'com.ultras'
@@ -23,6 +34,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.5.4'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.4'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'com.auth0:java-jwt:3.18.2'
 	implementation 'org.mapstruct:mapstruct:1.5.2.Final'
 	compileOnly 'org.projectlombok:lombok'

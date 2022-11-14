@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BuyTicketRequest {
+    private int ticketAmount;
     private Match match;
     private User buyer;
     private double price;

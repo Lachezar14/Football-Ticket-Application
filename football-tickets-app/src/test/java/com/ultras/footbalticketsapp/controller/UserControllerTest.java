@@ -15,6 +15,7 @@ import com.ultras.footbalticketsapp.serviceInterface.UserService;
 
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ContextConfiguration(classes = {UserController.class})
 @ExtendWith(SpringExtension.class)
+@Disabled
 class UserControllerTest {
     @Autowired
     private UserController userController;

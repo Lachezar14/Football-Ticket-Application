@@ -90,7 +90,6 @@ class  UserServiceTest {
         assertThat(created.getLast_name()).isEqualTo(user.getLast_name());
         assertThat(created.getEmail()).isEqualTo(user.getEmail());
         assertThat(created.getPhone_number()).isEqualTo(user.getPhone_number());
-        //assertThat(created.getPassword()).isEqualTo(user.getPassword());
         assertThat(created.getRole().toString()).isEqualTo(user.getRoleName());
     }
 
@@ -98,8 +97,6 @@ class  UserServiceTest {
     void saveUserWithExistingEmail(){
         //given
         RegisterUserRequest user = new RegisterUserRequest("bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", "ROLE_USER");
-        //List<Role> roles = new ArrayList<>();
-        //roles.add(new Role(1,"ROLE_USER"));
 
         //when
         given(userRepository.findByEmail(user.getEmail())).willReturn(

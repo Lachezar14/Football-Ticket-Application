@@ -2,8 +2,6 @@ package com.ultras.footbalticketsapp.controller;
 
 import com.ultras.footbalticketsapp.controller.footballTeam.FootballTeamResponse;
 import com.ultras.footbalticketsapp.controller.footballTeam.NewFootballTeamRequest;
-import com.ultras.footbalticketsapp.model.FootballTeam;
-import com.ultras.footbalticketsapp.model.Stadium;
 import com.ultras.footbalticketsapp.serviceInterface.FootballTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,6 @@ public class FootballTeamController {
         return ResponseEntity.ok().body(footballTeamService.getAllFootballTeams());
     }
 
-    //TODO ask teacher about this how can i use the teamId in the url
     @PutMapping("/update")
     public ResponseEntity<FootballTeamResponse> updateFootballTeam(@RequestBody FootballTeamResponse team){
         return ResponseEntity.ok().body(footballTeamService.updateFootballTeam(team));
@@ -55,21 +52,21 @@ public class FootballTeamController {
     }
 
     //TODO remove because is in saveTeam method
-    @PostMapping("/stadium")
-    public String saveStadium(Stadium stadium){
-        footballTeamService.saveStadium(stadium);
-        return "Stadium saved successfully";
-    }
+//    @PostMapping("/stadium")
+//    public String saveStadium(Stadium stadium){
+//        footballTeamService.saveStadium(stadium);
+//        return "Stadium saved successfully";
+//    }
 
     //TODO remove because is not used
-    @GetMapping("/stadium/{stadiumId}")
-    public Stadium getStadium(@PathVariable("stadiumId") int stadiumId){
-        return footballTeamService.getStadiumById(stadiumId);
-    }
+//    @GetMapping("/stadium/{stadiumId}")
+//    public Stadium getStadium(@PathVariable("stadiumId") int stadiumId){
+//        return footballTeamService.getStadiumById(stadiumId);
+//    }
 
-    @DeleteMapping("/stadium/{stadiumId}")
-    public String deleteStadium(@PathVariable("stadiumId") int stadiumId){
-        footballTeamService.deleteStadium(stadiumId);
-        return "Stadium deleted successfully";
-    }
+//    @DeleteMapping("/stadium/{stadiumId}")
+//    public String deleteStadium(@PathVariable("stadiumId") int stadiumId){
+//        footballTeamService.deleteStadium(stadiumId);
+//        return "Stadium deleted successfully";
+//    }
 }

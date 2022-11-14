@@ -8,8 +8,11 @@ import com.ultras.footbalticketsapp.repository.MatchRepository;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+
 
 @Service
 public class MatchServiceImpl implements MatchService {
@@ -26,10 +29,9 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public MatchResponse saveMatch(NewMatchRequest newMatchRequest) {
         Match match = matchMapper.newMatchRequestToMatch(newMatchRequest);
-        //TODO throws query exception check query implementation
-//        if(matchRepository.findByHomeTeamAndAwayTeamAndDate(match.getHome_team().getId(), match.getAway_team().getId(), match.getDate()) != null){
-//            throw new IllegalStateException("Match already exists");
-//        }
+        if(matchRepository.findByHomeTeamAndAwayTeamAndDate(match.getHome_team().getId(), match.getAway_team().getId(), match.getDate()) != null){
+            throw new IllegalStateException("Match already exists");
+        }
         matchRepository.save(match);
         return matchMapper.matchToMatchResponse(match);
     }
@@ -50,7 +52,7 @@ public class MatchServiceImpl implements MatchService {
         Match toUpdate = matchRepository.findById(match.getId()).orElse(null);
         Match updated = matchMapper.matchResponseToMatch(match);
         if(toUpdate == null){
-            throw new IllegalStateException("Match not found");
+            throw new RuntimeException("Match not found");
         }
         toUpdate.setHome_team(updated.getHome_team());
         toUpdate.setAway_team(updated.getAway_team());
@@ -65,23 +67,22 @@ public class MatchServiceImpl implements MatchService {
     public void deleteMatchById(int matchId) {
         Match match = matchRepository.findById(matchId).orElse(null);
         if(match == null){
-            throw new IllegalStateException("Match not found");
+            throw new RuntimeException("Match not found");
         }
         matchRepository.delete(match);
     }
 
     @Override
-    public boolean TicketBought(int matchId) {
+    public void TicketBought(int matchId, int ticketAmount) {
         Match match = matchRepository.findById(matchId).orElse(null);
         if(match == null){
-            throw new IllegalStateException("Match not found");
+            throw new RuntimeException("Match not found");
         }
         if(match.getTicket_number() == 0){
-            throw new IllegalStateException("No tickets left");
+            throw new RuntimeException("No tickets left");
         }
-        match.setTicket_number(match.getTicket_number() - 1);
+        match.setTicket_number(match.getTicket_number() - ticketAmount);
         matchRepository.save(match);
-        return true;
     }
 }
 

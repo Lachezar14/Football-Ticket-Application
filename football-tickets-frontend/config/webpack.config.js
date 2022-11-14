@@ -63,7 +63,7 @@ const useTailwind = fs.existsSync(
   path.join(paths.appPath, 'tailwind.config.js')
 );
 
-// Get the path to the uncompiled service worker (if it exists).
+// Get the path to the uncompiled services worker (if it exists).
 const swSrc = paths.swSrc;
 
 // style files regexes
@@ -661,7 +661,7 @@ module.exports = function (webpackEnv) {
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
       }),
-      // Generate a service worker script that will precache, and keep up to date,
+      // Generate a services worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the webpack build.
       isEnvProduction &&
         fs.existsSync(swSrc) &&

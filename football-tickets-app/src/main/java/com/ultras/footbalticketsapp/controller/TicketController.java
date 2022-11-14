@@ -24,7 +24,7 @@ public class TicketController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<TicketResponse> saveTicket(@RequestBody BuyTicketRequest ticket){
+    public ResponseEntity<TicketResponse> buyTicket(@RequestBody BuyTicketRequest ticket){
         TicketResponse savedTicket = ticketService.buyTicket(ticket);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/tickets/" + savedTicket.getId()).toUriString());
         return ResponseEntity.created(uri).body(savedTicket);
@@ -46,15 +46,15 @@ public class TicketController {
     }
 
     //TODO delete because ticket info should not be updated
-    @PutMapping("/{ticketId}")
-    public ResponseEntity<TicketResponse> updateTicket(@PathVariable("ticketId") TicketResponse ticket){
-        return ResponseEntity.ok().body(ticketService.updateTicket(ticket));
-    }
-
-    //TODO delete because ticket info should not be deleted
-    @DeleteMapping("/{ticketId}")
-    public String deleteTicket(@PathVariable("ticketId") int ticketId){
-        ticketService.deleteTicket(ticketId);
-        return "Ticket deleted successfully";
-    }
+//    @PutMapping("/{ticketId}")
+//    public ResponseEntity<TicketResponse> updateTicket(@PathVariable("ticketId") TicketResponse ticket){
+//        return ResponseEntity.ok().body(ticketService.updateTicket(ticket));
+//    }
+//
+//    //TODO delete because ticket info should not be deleted
+//    @DeleteMapping("/{ticketId}")
+//    public String deleteTicket(@PathVariable("ticketId") int ticketId){
+//        ticketService.deleteTicket(ticketId);
+//        return "Ticket deleted successfully";
+//    }
 }

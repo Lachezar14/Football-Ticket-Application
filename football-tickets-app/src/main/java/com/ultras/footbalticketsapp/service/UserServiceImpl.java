@@ -118,6 +118,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(userToUpdate == null){
             throw new RuntimeException("User not found");
         }
+        if(userRepository.findByEmail(updateUserRequest.getEmail()) != null){
+            throw new RuntimeException("Email already in use");
+        }
         userToUpdate.setFirst_name(updateUserRequest.getFirst_name());
         userToUpdate.setLast_name(updateUserRequest.getLast_name());
         userToUpdate.setPhone_number(updateUserRequest.getPhone_number());

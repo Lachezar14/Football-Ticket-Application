@@ -64,6 +64,7 @@ public class UserControllerIntegrationTest {
                 .build();
     }
 
+    //TODO rename the tests like the picture from bart example
     @Test
     void testRegisterUser() throws Exception {
         when(userService.registerUser((RegisterUserRequest) any()))

@@ -1,29 +1,43 @@
 
-import HomePage from "./pages/HomePage";
-import SignInPage from "./pages/SignInPage";
+import HomePageLayout from "./layouts/HomePageLayout";
+import SignInLayout from "./layouts/SignInLayout";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import RegisterPage from "./pages/RegisterPage";
-import MatchesListPage from "./pages/MatchesListPage";
-import ProfilePage from "./pages/ProfilePage";
-import AdminPage from "./pages/AdminPage";
-import AdminMatchPage from "./pages/AdminMatchPage";
-import AdminTeamPage from "./pages/AdminTeamPage";
-import TicketsSalePage from "./pages/TicketsSalePage";
+import RegisterLayout from "./layouts/RegisterLayout";
+import MatchesListLayout from "./layouts/MatchesListLayout";
+import ProfileLayout from "./layouts/ProfileLayout";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminMatchLayout from "./layouts/AdminMatchLayout";
+import AdminTeamLayout from "./layouts/AdminTeamLayout";
+import TicketsSaleLayout from "./layouts/TicketsSaleLayout";
+import GroupChatLayout from "./components/groupChat/GroupChatLayout";
 
 function App() {
+    //TODO uncomment when final version is ready
+    //const user = Api.getCurrentUser();
+    
   return (
     <div>
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<HomePage />} />
-                <Route path='/matches' element={<MatchesListPage />} />
-                <Route path='/ticketSale' element={<TicketsSalePage />} />
-                <Route path='/login' element={<SignInPage/>} />
-                <Route path='/register' element={<RegisterPage/>} />
-                <Route path='/profile' element={<ProfilePage/>} />
-                <Route path='/admin' element={<AdminPage/>} />
-                <Route path='/admin/matches' element={<AdminMatchPage/>} />
-                <Route path='/admin/teams' element={<AdminTeamPage/>} />
+                <Route path='/' element={<HomePageLayout />} />
+                <Route path='/matches' element={<MatchesListLayout />} />
+                <Route path='/matches/ticketSale' element={<TicketsSaleLayout />} />
+                <Route path='/login' element={<SignInLayout/>} />
+                <Route path='/register' element={<RegisterLayout/>} />
+                <Route path='/chat' element={<GroupChatLayout/>} />
+
+                {/*TODO used for development. Remove when final version is ready*/}
+                <Route path='/profile' element={<ProfileLayout/>} />
+                <Route path='/admin' element={<AdminLayout/>} />
+                <Route path='/admin/matches' element={<AdminMatchLayout/>} />
+                <Route path='/admin/teams' element={<AdminTeamLayout/>} />
+
+                {/* TODO uncomment protected routes when final version is ready
+                <Route path='/profile' element={ user && user.role === "USER" ? <ProfileLayout/> : <HomePageLayout/>}/>
+                <Route path='/admin' element={ user && user.role === "ADMIN" ? <AdminLayout/> : <HomePageLayout/>}/>
+                <Route path='/admin/matches' element={ user && user.role === "ADMIN" ? <AdminMatchLayout/> : <HomePageLayout/>}/>
+                <Route path='/admin/teams' element={ user && user.role === "ADMIN" ? <AdminTeamLayout/> : <HomePageLayout/>}/>
+                */}
             </Routes>
         </BrowserRouter>
     </div>
