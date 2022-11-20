@@ -6,7 +6,7 @@ const matchesURL = 'http://localhost:8080/matches';
 
 const getMatches = async () => {
     try {
-        return axios.get(`${matchesURL}/`);
+        return await axios.get(`${matchesURL}/`);
     } catch (error) {
         console.log('Error while calling getUsers services ', error);
     }

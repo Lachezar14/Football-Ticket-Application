@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 import java.util.Arrays;
 
@@ -50,9 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**","/api/register/**", "/api/token/refresh/**", "/api/data", "/matches/**", "/teams/**", "/tickets/**",
-               "/api/users","/api/**", "/api/statistics").permitAll();
-        //http.authorizeRequests().antMatchers( "/api/user/**").hasAnyAuthority("ROLE_USER");
-        //http.authorizeRequests().antMatchers( "/api/admin/**").hasAnyAuthority("ROLE_ADMIN");
+               "/api/users","/api/**", "/api/statistics","/websocket/**").permitAll();
         http.authorizeRequests().antMatchers( "/api/user/**").hasAnyAuthority("USER");
         http.authorizeRequests().antMatchers( "/api/admin/**").hasAnyAuthority("ADMIN");
 ;

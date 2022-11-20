@@ -8,6 +8,9 @@ import com.ultras.footbalticketsapp.serviceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -17,6 +20,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -46,6 +50,17 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserById(@PathVariable("userId") int userId){
         return ResponseEntity.ok().body(userService.getUserById(userId));
     }
+
+    //TODO this fixes the issue with that any user can get other users info but breaks authentication in the frontend
+//
+//    @GetMapping("/email/{email}")
+//    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(value = "email") String email){
+//        Object loggedUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if(loggedUser.equals(email)){
+//            return ResponseEntity.ok().body(userService.getUserByEmail(email));
+//        }
+//        return ResponseEntity.status(403).build();
+//    }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(value = "email") String email){

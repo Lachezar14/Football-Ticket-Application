@@ -11,9 +11,7 @@ import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
 import com.ultras.footbalticketsapp.controller.user.UserDTO;
 import com.ultras.footbalticketsapp.mapper.UserMapper;
 import com.ultras.footbalticketsapp.model.AccountType;
-import com.ultras.footbalticketsapp.model.Role;
 import com.ultras.footbalticketsapp.model.User;
-import com.ultras.footbalticketsapp.repository.RoleRepository;
 import com.ultras.footbalticketsapp.repository.UserRepository;
 import com.ultras.footbalticketsapp.serviceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +37,13 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.roleRepository = roleRepository;
         this.userMapper = userMapper;
     }
 
@@ -62,12 +58,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
         return userMapper.userToUserDTO(newUser);
-    }
-
-    //TODO remove because user has enum not role class
-    @Override
-    public Role saveRole(Role role) {
-        return roleRepository.save(role);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.ultras.footbalticketsapp.controller.user.NewPasswordRequest;
 import com.ultras.footbalticketsapp.controller.user.RegisterUserRequest;
 import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
 import com.ultras.footbalticketsapp.controller.user.UserDTO;
-import com.ultras.footbalticketsapp.model.Role;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +13,6 @@ import java.util.List;
 
 public interface UserService {
     UserDTO registerUser(RegisterUserRequest user);
-    Role saveRole(Role role);
     void makeUserAdmin(UserDTO user);
     UserDTO getUserById(int userId);
     UserDTO getUserByEmail(String email);

@@ -6,9 +6,7 @@ import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
 import com.ultras.footbalticketsapp.controller.user.UserDTO;
 import com.ultras.footbalticketsapp.mapper.UserMapper;
 import com.ultras.footbalticketsapp.model.AccountType;
-import com.ultras.footbalticketsapp.model.Role;
 import com.ultras.footbalticketsapp.model.User;
-import com.ultras.footbalticketsapp.repository.RoleRepository;
 import com.ultras.footbalticketsapp.repository.UserRepository;
 import com.ultras.footbalticketsapp.service.UserServiceImpl;
 import com.ultras.footbalticketsapp.serviceInterface.UserService;
@@ -34,8 +32,6 @@ class  UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private RoleRepository roleRepository;
-    @Mock
     private UserMapper userMapper;
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
@@ -44,7 +40,7 @@ class  UserServiceTest {
     @BeforeEach
     void setUp() {
         userService = new UserServiceImpl(
-                userRepository,passwordEncoder,roleRepository,userMapper);
+                userRepository,passwordEncoder,userMapper);
     }
 
     @Test
@@ -237,8 +233,6 @@ class  UserServiceTest {
     void updatePassword() {
         //given
         NewPasswordRequest newPasswordRequest = new NewPasswordRequest(1, "12345", "67890");
-        List<Role> roles = new ArrayList<>();
-        roles.add(new Role(1,"ROLE_USER"));
         User user = new User(1, "bobby", "smurda", "1234567899", "bobby@gmial.com", "12345", AccountType.USER);
 
         //when

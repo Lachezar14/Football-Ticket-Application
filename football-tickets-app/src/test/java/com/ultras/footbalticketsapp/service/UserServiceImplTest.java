@@ -14,7 +14,6 @@ import com.ultras.footbalticketsapp.controller.user.UserDTO;
 import com.ultras.footbalticketsapp.mapper.UserMapper;
 import com.ultras.footbalticketsapp.model.AccountType;
 import com.ultras.footbalticketsapp.model.User;
-import com.ultras.footbalticketsapp.repository.RoleRepository;
 import com.ultras.footbalticketsapp.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -36,9 +35,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @Disabled
 class UserServiceImplTest {
-    @MockBean
-    private RoleRepository roleRepository;
-
     @MockBean
     private UserMapper userMapper;
 

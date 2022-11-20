@@ -14,22 +14,19 @@ const register = async (data) => {
  * @property {string} refresh_token
  */
 
-const login = (data) => {
-    return axios
-        .post(`${usersUrl}/login` , data)
-        .then((response) => {
-            //console.log(response);
-            if (response.data.access_token) {
-                const info = jwt_decode(response.data.access_token);
-                userService.getUserByEmail(info.sub).then((response) => {
-                    //localStorage.setItem("user", JSON.stringify(response.data));
-                    sessionStorage.setItem("user", JSON.stringify(response.data));
-                    //console.log(response.data);})
-            })} else {
-                console.warn("No tokens in response");
-            }
-            return response.data.access_token;
-        });
+const login = async (data) => {
+    let response = await axios.post(`${usersUrl}/login` , data);
+    
+    if (response.data.access_token) {
+        const info = jwt_decode(response.data.access_token);
+        let userResponse = await userService.getUserByEmail(info.sub);
+        sessionStorage.setItem("user", JSON.stringify(userResponse.data));
+        sessionStorage.setItem("token", JSON.stringify(response.data.access_token));
+    } else {
+        console.warn("No tokens in response");
+    }
+    
+    return response.data.access_token;
 }
 
 /**

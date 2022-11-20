@@ -49,6 +49,7 @@ export default function SignIn() {
         api.login(data)
             .then(token => {
                 const decoded = jwt_decode(token);
+                console.log(decoded);
                 if (decoded.role.some(role => role === 'USER')) {
                 window.location.href = "/profile";
                 }else if (decoded.role.some(role => role === 'ADMIN'))  {
