@@ -48,6 +48,10 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public int getNumberOfMatchesByTeam(int teamId) {
+        return matchRepository.getNumberOfMatchesByTeam(teamId);
+    }
+    @Override
     public MatchResponse updateMatch(MatchResponse match) {
         Match toUpdate = matchRepository.findById(match.getId()).orElse(null);
         Match updated = matchMapper.matchResponseToMatch(match);

@@ -16,4 +16,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     List<Ticket> findAllByUserId(int userId);
     //List<Ticket> findAllByMatchId(int matchId);
 
+    @Query(
+            value = "SELECT COUNT(*) FROM `tickets` INNER JOIN `matches` ON tickets.match_id = matches.id WHERE (matches.away_team_id = ?1) OR (matches.home_team_id = ?1);",
+            nativeQuery = true)
+    int countAllByTeamId(int teamId);
+
+
 }

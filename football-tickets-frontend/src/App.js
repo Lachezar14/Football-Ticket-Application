@@ -10,6 +10,7 @@ import AdminMatchLayout from "./layouts/AdminMatchLayout";
 import AdminTeamLayout from "./layouts/AdminTeamLayout";
 import TicketsSaleLayout from "./layouts/TicketsSaleLayout";
 import GroupChatLayout from "./components/groupChat/GroupChatLayout";
+import StatisticsLayout from "./layouts/StatisticsPageLayout";
 
 function App() {
     //TODO uncomment when final version is ready
@@ -31,6 +32,7 @@ function App() {
                 <Route path='/admin' element={<AdminLayout/>} />
                 <Route path='/admin/matches' element={<AdminMatchLayout/>} />
                 <Route path='/admin/teams' element={<AdminTeamLayout/>} />
+                <Route path='/admin/statistics' element={<StatisticsLayout/>}/>
 
                 {/* TODO uncomment protected routes when final version is ready
                 <Route path='/profile' element={ user && user.role === "USER" ? <ProfileLayout/> : <HomePageLayout/>}/>

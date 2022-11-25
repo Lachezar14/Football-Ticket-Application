@@ -40,6 +40,11 @@ public class MatchController {
         return ResponseEntity.ok().body(matchService.getAllMatches());
     }
 
+    @GetMapping("/team/{teamId}")
+    public ResponseEntity<Integer> getNumberOfMatchesByTeam(@PathVariable("teamId") int teamId){
+        return ResponseEntity.ok().body(matchService.getNumberOfMatchesByTeam(teamId));
+    }
+
     //TODO fix because it passes an object there should be RequestBody but maybe remove the pathVariable and change URI to /update
     @PutMapping("/{matchId}")
     public ResponseEntity<MatchResponse> updateMatch(@PathVariable("matchId") int id, @RequestBody MatchResponse match){

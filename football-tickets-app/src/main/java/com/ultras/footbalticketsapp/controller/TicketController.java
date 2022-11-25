@@ -45,6 +45,11 @@ public class TicketController {
         return ResponseEntity.ok().body(ticketService.getTicketsByUserId(userId));
     }
 
+    @GetMapping("/team/{teamId}")
+    public ResponseEntity<Integer> countAllByTeamId(@PathVariable("teamId") int teamId){
+        return ResponseEntity.ok().body(ticketService.countAllByTeamId(teamId));
+    }
+
     //TODO delete because ticket info should not be updated
 //    @PutMapping("/{ticketId}")
 //    public ResponseEntity<TicketResponse> updateTicket(@PathVariable("ticketId") TicketResponse ticket){

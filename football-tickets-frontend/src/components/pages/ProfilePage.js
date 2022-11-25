@@ -56,8 +56,9 @@ export default function ProfilePage() {
         });
     };
     
-    const handleLogOutSubmit = (event) => {
+    const handleLogOutSubmit = () => {
         sessionStorage.removeItem("user");
+        sessionStorage.removeItem("token");
         window.location.href = "/";
     };
 

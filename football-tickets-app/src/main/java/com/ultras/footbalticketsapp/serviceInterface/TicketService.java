@@ -10,6 +10,7 @@ public interface TicketService {
     TicketResponse getTicketById(int id);
     //List<Ticket> getTicketsByMatchId(int matchId);
     List<TicketResponse> getTicketsByUserId(int userId);
+    int countAllByTeamId(int teamId);
     //TicketResponse updateTicket(TicketResponse ticket);
     //void deleteTicket(int id);
 }

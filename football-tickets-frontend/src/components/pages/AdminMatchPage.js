@@ -1,13 +1,8 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import dayjs from 'dayjs';
@@ -15,7 +10,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import MenuItem from "@mui/material/MenuItem";
-import Api from "../../services/api";
 import {useEffect, useState} from "react";
 import teamsService from "../../services/teamsService";
 import matchService from "../../services/matchService";
@@ -330,7 +324,7 @@ export default function AdminMatchPage() {
                                     label="Home Team"
                                     key={updateMatch.home_team}
                                     defaultValue={updateMatch.home_team}
-                                    //value={homeTeam}
+                                    //value={updateMatch.home_team}
                                     onChange={homeTeamHandleChange}
                                     sx={{mt: 3}}
                                 >

@@ -66,6 +66,11 @@ public class TicketServiceImpl implements TicketService {
         return ticketMapper.ticketsToTicketsResponse(ticketRepository.findAllByUserId(userId));
     }
 
+    @Override
+    public int countAllByTeamId(int teamId){
+        return ticketRepository.countAllByTeamId(teamId);
+    }
+
     //TODO remove because ticket data should not be changed
 //
 //    @Override

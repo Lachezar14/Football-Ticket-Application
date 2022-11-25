@@ -10,6 +10,7 @@ public interface MatchService {
     MatchResponse saveMatch(NewMatchRequest match);
     MatchResponse getMatchById(int matchId);
     List<MatchResponse> getAllMatches();
+    int getNumberOfMatchesByTeam(int teamId);
     MatchResponse updateMatch(MatchResponse match);
     void deleteMatchById(int matchId);
     void TicketBought(int matchId, int ticketAmount);
