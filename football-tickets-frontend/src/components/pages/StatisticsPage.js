@@ -11,6 +11,8 @@ import {Box} from "@mui/system";
 import statisticsService from "../../services/statisticsService";
 import teamsService from "../../services/teamsService";
 import {useEffect, useState} from "react";
+import Button from "@mui/material/Button";
+import {Link} from "react-router-dom";
 
 
 
@@ -25,8 +27,18 @@ export default function StatisticsPage() {
         });
       setRerender(false);
     }, [rerender]);
-    
+
     useEffect(() => {
+        teams.map((team) => (
+            statisticsService.getAVGSalesOfTicketsPerTeam(team.id).then((res) => {
+                team.avg = res.data;
+                setTeams(teams);
+            })
+        ))
+        setRerender(true);
+    }, [teams]);
+
+    {/*useEffect(() => {
         teams.map((team) => (
             statisticsService.getNumberOfMatchesByTeam(team.id).then((res) => {
                 team.matchesNr = res.data;
@@ -45,19 +57,34 @@ export default function StatisticsPage() {
         ))
         setRerender(true);
     }, [teams]);
-    
+    */}
     
     return (
         <>
+            <Box
+                sx={{
+                    mb: 7,
+                    mt:7,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <Button component={Link}
+                        to={"/admin"}
+                        variant="contained"
+                        size='large'
+                        style={{width: '200px'}}
+                >
+                    Go Back
+                </Button>
+            </Box>
             <Typography variant="h4" align="center" sx={{mt:4}}>Statistics Page</Typography>
-        <Typography component="h1" variant="h5" align="center" sx={{mt:10}}>Statistics about average sales of tickets per team per match</Typography>
-        <TableContainer component={Box}>
-            <Table sx={{ minWidth: 200,mt:2}} aria-label="simple table">
+        <Typography component="h1" variant="h5" align="center" sx={{mt:10}}>Statistics about average sales of tickets per team</Typography>
+        <TableContainer component={Paper} sx={{mt:2}}>
+            <Table  aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell sx={{fontWeight: 'bold'}}>Football Team</TableCell>
-                        <TableCell sx={{fontWeight: 'bold'}}>Matches in system</TableCell>
-                        <TableCell sx={{fontWeight: 'bold'}}>Tickets sold</TableCell>
                         <TableCell sx={{fontWeight: 'bold'}}>AVG ticket sales per matches</TableCell>
                     </TableRow>
                 </TableHead>
@@ -67,12 +94,8 @@ export default function StatisticsPage() {
                                 key={team.id}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
                             >
-                                <TableCell component="th" scope="row">
-                                    {team.name}
-                                </TableCell>
-                                <TableCell>{team.matchesNr}</TableCell>
-                                <TableCell>{team.ticketNr}</TableCell>
-                                <TableCell>{team.ticketNr/team.matchesNr}</TableCell>
+                                <TableCell component="th" scope="row">{team.name}</TableCell>
+                                <TableCell>{team.avg}</TableCell>
                             </TableRow>
                     ))}
                 </TableBody>

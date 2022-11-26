@@ -45,9 +45,14 @@ public class TicketController {
         return ResponseEntity.ok().body(ticketService.getTicketsByUserId(userId));
     }
 
+//    @GetMapping("/team/{teamId}")
+//    public ResponseEntity<Integer> countAllByTeamId(@PathVariable("teamId") int teamId){
+//        return ResponseEntity.ok().body(ticketService.countAllByTeamId(teamId));
+//    }
+
     @GetMapping("/team/{teamId}")
-    public ResponseEntity<Integer> countAllByTeamId(@PathVariable("teamId") int teamId){
-        return ResponseEntity.ok().body(ticketService.countAllByTeamId(teamId));
+    public ResponseEntity<Double> getAVGSaleOfTicketsPerTeam(@PathVariable("teamId") int teamId){
+        return ResponseEntity.ok().body(ticketService.getAVGSaleOfTicketsPerTeam(teamId));
     }
 
     //TODO delete because ticket info should not be updated

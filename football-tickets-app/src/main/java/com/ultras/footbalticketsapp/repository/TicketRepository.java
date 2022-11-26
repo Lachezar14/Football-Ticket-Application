@@ -21,5 +21,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
             nativeQuery = true)
     int countAllByTeamId(int teamId);
 
+    @Query(
+            value = "SELECT (SELECT COUNT(*) \n" +
+                    "        FROM `tickets` \n" +
+                    "        INNER JOIN `matches` \n" +
+                    "        ON tickets.match_id = matches.id \n" +
+                    "        WHERE (matches.away_team_id = ?1) OR (matches.home_team_id = ?1)) / \n" +
+                    "        (SELECT COUNT(*) \n" +
+                    "         FROM `matches` \n" +
+                    "         WHERE (away_team_id = ?1) OR (home_team_id = ?1))",
+            nativeQuery = true)
+    double getAVGSaleOfTicketsPerTeam(int teamId);
+
 
 }

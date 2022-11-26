@@ -69,6 +69,13 @@ export default function AdminPage() {
                     Match Management
                 </Button>
                 <Button component={Link}
+                        to={"/admin/statistics"}
+                        variant="contained"
+                        size='large'
+                >
+                    Statistics
+                </Button>
+                <Button component={Link}
                         to={"/admin/teams"}
                         variant="contained"
                         size='large'

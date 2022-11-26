@@ -11,6 +11,7 @@ public interface TicketService {
     //List<Ticket> getTicketsByMatchId(int matchId);
     List<TicketResponse> getTicketsByUserId(int userId);
     int countAllByTeamId(int teamId);
+    double getAVGSaleOfTicketsPerTeam(int teamId);
     //TicketResponse updateTicket(TicketResponse ticket);
     //void deleteTicket(int id);
 }

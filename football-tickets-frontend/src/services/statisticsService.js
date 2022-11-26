@@ -19,7 +19,16 @@ const getNumberOfTicketsByTeam = async (id) => {
     }
 }
 
+const getAVGSalesOfTicketsPerTeam = async (id) => {
+    try {
+        return await axios.get(`${ticketsURL}/team/${id}`);
+    } catch (error) {
+        console.log('Error while calling getUsers services ', error);
+    }
+}
+
 export default {
     getNumberOfMatchesByTeam,
-    getNumberOfTicketsByTeam
+    getNumberOfTicketsByTeam,
+    getAVGSalesOfTicketsPerTeam
 }

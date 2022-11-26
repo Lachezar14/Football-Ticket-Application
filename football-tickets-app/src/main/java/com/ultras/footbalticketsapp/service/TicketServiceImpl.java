@@ -4,7 +4,6 @@ import com.ultras.footbalticketsapp.controller.match.MatchResponse;
 import com.ultras.footbalticketsapp.controller.ticket.BuyTicketRequest;
 import com.ultras.footbalticketsapp.controller.ticket.TicketResponse;
 import com.ultras.footbalticketsapp.mapper.TicketMapper;
-import com.ultras.footbalticketsapp.model.Match;
 import com.ultras.footbalticketsapp.model.Ticket;
 import com.ultras.footbalticketsapp.repository.TicketRepository;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
@@ -69,6 +68,11 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public int countAllByTeamId(int teamId){
         return ticketRepository.countAllByTeamId(teamId);
+    }
+
+    @Override
+    public double getAVGSaleOfTicketsPerTeam(int teamId){
+        return ticketRepository.getAVGSaleOfTicketsPerTeam(teamId);
     }
 
     //TODO remove because ticket data should not be changed
