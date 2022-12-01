@@ -66,7 +66,7 @@ class  MatchServiceTest {
     }
 
     @Test
-    void testSaveMatch_throwsIllegalStateException_whenMatchAlreadyExists(){
+    void testSaveMatch_throwsRuntimeException_whenMatchAlreadyExists(){
         //given
         Stadium stadium = new Stadium(1, "Name", 3);
         FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
@@ -84,6 +84,25 @@ class  MatchServiceTest {
         assertThatThrownBy(() -> matchService.saveMatch(newMatchRequest))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Match already exists");
+    }
+
+    @Test
+    void testSaveMatch_throwsRuntimeException_whenMatchHomeTeamAndAwayTeamAreSame(){
+        //given
+        Stadium stadium = new Stadium(1, "Name", 3);
+        FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
+        Date now = new Date(); //return current date and time
+        Match match = new Match(1,footballTeam, footballTeam, now, 100,10.0);
+        NewMatchRequest newMatchRequest = new NewMatchRequest(footballTeam, footballTeam, now, 100,10.0);
+
+        //when
+        when(matchMapper.newMatchRequestToMatch(any())).thenReturn(match);
+        when(matchRepository.findByHomeTeamAndAwayTeamAndDate(anyInt(), anyInt(), any(Date.class))).thenReturn(match);
+
+        //then
+        assertThatThrownBy(() -> matchService.saveMatch(newMatchRequest))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Home team and away team cannot be the same");
     }
 
     @Test
@@ -108,7 +127,7 @@ class  MatchServiceTest {
     }
 
     @Test
-    void getAllMatches(){
+    void testGetAllMatches(){
         //when
         matchService.getAllMatches();
         //then
@@ -148,7 +167,7 @@ class  MatchServiceTest {
     }
 
     @Test
-    void testUpdateMatch_throwsIllegalStateException_whenMatchIsNull() {
+    void testUpdateMatch_throwsRuntimeException_whenMatchIsNull() {
         //given
         MatchResponse matchResponse = new MatchResponse();
 
@@ -160,6 +179,25 @@ class  MatchServiceTest {
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Match not found");
         verify(matchRepository).findById((Integer) any());
+    }
+
+    @Test
+    void testUpdateMatch_throwsRuntimeException_whenMatchHomeTeamAndAwayTeamAreSame(){
+        //given
+        Stadium stadium = new Stadium(1, "Name", 3);
+        FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
+        Date now = new Date(); //return current date and time
+        Match match = new Match(1,footballTeam, footballTeam, now, 100,10.0);
+        MatchResponse matchResponse = new MatchResponse(1,footballTeam, footballTeam, now, 100,10.0);
+
+        //when
+        when(matchMapper.matchResponseToMatch(any())).thenReturn(match);
+        when(matchRepository.findById((Integer) any())).thenReturn(Optional.of(match));
+
+        //then
+        assertThatThrownBy(() -> matchService.updateMatch(matchResponse))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Home team and away team cannot be the same");
     }
 
     @Test
@@ -185,7 +223,7 @@ class  MatchServiceTest {
     }
 
     @Test
-    void testDeleteMatchById_throwsIllegalStateException_whenMatchIsNull() {
+    void testDeleteMatchById_throwsRuntimeException_whenMatchIsNull() {
         //when
         when(matchRepository.findById((Integer) any())).thenReturn(Optional.empty());
 
@@ -218,7 +256,7 @@ class  MatchServiceTest {
     }
 
     @Test
-    void testTicketBought_throwsIllegalStateException_whenMatchIsNull() {
+    void testTicketBought_throwsRuntimeException_whenMatchIsNull() {
         //when
         when(matchRepository.findById((Integer) any())).thenReturn(Optional.empty());
 
@@ -230,7 +268,7 @@ class  MatchServiceTest {
     }
 
     @Test
-    void testTicketBought_throwsIllegalStateException_whenTicketNumberIsZero() {
+    void testTicketBought_throwsRuntimeException_whenTicketNumberIsZero() {
         //given
         Stadium stadium = new Stadium(1, "Name", 3);
         FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);

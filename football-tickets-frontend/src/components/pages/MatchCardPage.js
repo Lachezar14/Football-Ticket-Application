@@ -12,6 +12,7 @@ import {useState, useEffect} from "react";
 import matchService from "../../services/matchService";
 import {Link} from "react-router-dom";
 import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
 
 export default function MatchCardPage() {
 
@@ -32,7 +33,7 @@ export default function MatchCardPage() {
     
     
     return (
-        <div>
+            <div>
             {/* Hero unit */}
             <Box
                 sx={{

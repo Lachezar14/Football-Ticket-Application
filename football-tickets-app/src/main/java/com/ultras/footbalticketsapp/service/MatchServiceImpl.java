@@ -30,7 +30,11 @@ public class MatchServiceImpl implements MatchService {
     public MatchResponse saveMatch(NewMatchRequest newMatchRequest) {
         Match match = matchMapper.newMatchRequestToMatch(newMatchRequest);
         if(matchRepository.findByHomeTeamAndAwayTeamAndDate(match.getHome_team().getId(), match.getAway_team().getId(), match.getDate()) != null){
-            throw new IllegalStateException("Match already exists");
+            throw new RuntimeException("Match already exists");
+        }
+        //TODO add unit test for this
+        if(newMatchRequest.getHome_team().getName() == newMatchRequest.getAway_team().getName()){
+            throw new RuntimeException("Home team and away team cannot be the same");
         }
         matchRepository.save(match);
         return matchMapper.matchToMatchResponse(match);
@@ -57,6 +61,10 @@ public class MatchServiceImpl implements MatchService {
         Match updated = matchMapper.matchResponseToMatch(match);
         if(toUpdate == null){
             throw new RuntimeException("Match not found");
+        }
+        //TODO add unit test for this
+        if(match.getHome_team().getName() == match.getAway_team().getName()){
+            throw new RuntimeException("Home team and away team cannot be the same");
         }
         toUpdate.setHome_team(updated.getHome_team());
         toUpdate.setAway_team(updated.getAway_team());

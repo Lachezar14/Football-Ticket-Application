@@ -49,8 +49,6 @@ export default function RegisterPage() {
             roleName: "USER"
         };
         
-        //data.forEach((value, key) => {object[key] = value});
-        
         Api.register(object).then((response) => {
             if (response.data.email) {
                 setRegSuccess(true);

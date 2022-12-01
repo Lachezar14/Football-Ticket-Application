@@ -51,10 +51,9 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserById(userId));
     }
 
-    //TODO this fixes the issue with that any user can get other users info but breaks authentication in the frontend
-    //TODO use users/me like how Twitter does it
+    //TODO uncomment cause work
 
-//    @GetMapping("{email}/me")
+//    @GetMapping("/email/{email}")
 //    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(value = "email") String email){
 //        Object loggedUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        if(loggedUser.equals(email)){

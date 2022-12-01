@@ -18,10 +18,10 @@ const login = async (data) => {
     let response = await axios.post(`${usersUrl}/login` , data);
     
     if (response.data.access_token) {
+        sessionStorage.setItem("token", JSON.stringify(response.data.access_token));
         const info = jwt_decode(response.data.access_token);
         let userResponse = await userService.getUserByEmail(info.sub);
         sessionStorage.setItem("user", JSON.stringify(userResponse.data));
-        sessionStorage.setItem("token", JSON.stringify(response.data.access_token));
     } else {
         console.warn("No tokens in response");
     }

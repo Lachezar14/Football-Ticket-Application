@@ -59,7 +59,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void saveUser() {
+    void testSaveUser() {
         //given
         RegisterUserRequest user = new RegisterUserRequest("bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", "USER");
 
@@ -90,7 +90,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void saveUserWithExistingEmail(){
+    void testSaveUser_throwsRuntimeException_whenEmailExists(){
         //given
         RegisterUserRequest user = new RegisterUserRequest("bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", "ROLE_USER");
 
@@ -107,7 +107,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void makeUserAdmin(){
+    void testMakeUserAdmin(){
         //given
         UserDTO userToUpdate = new UserDTO(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", AccountType.USER);
         User user = new User(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", AccountType.USER);
@@ -124,7 +124,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void makeUserAdminUserNull(){
+    void testMakeUser_throwsRuntimeException_whenAdminUserIsNull(){
         //given
         UserDTO userToUpdate = new UserDTO();
 
@@ -143,7 +143,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void getUserById() {
+    void testGetUserById() {
         //given
         User user = new User(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", AccountType.USER);
         Optional<User> ofResult = Optional.of(user);
@@ -160,7 +160,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void getUserByEmail() {
+    void testGetUserByEmail() {
         //given
         User user = new User(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", AccountType.USER);
         UserDTO userDTO = new UserDTO(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", AccountType.USER);
@@ -176,7 +176,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void getAllUsers() {
+    void testGetAllUsers() {
         //when
         userService.getAllUsers();
         //then
@@ -185,7 +185,7 @@ class  UserServiceTest {
 
 
     @Test
-    void updateUser() {
+    void testUpdateUser() {
         //given
         UpdateUserRequest user = new UpdateUserRequest(1,"bobby", "smurda", "1234567899", "bobby@gmail.com");
         UserDTO updatedUser = new UserDTO(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", AccountType.USER);
@@ -208,7 +208,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void updateUserNull(){
+    void testUpdateUser_throwsRuntimeException_whenUserIsNull(){
         //given
         UserDTO userDTO = new UserDTO();
         UpdateUserRequest user = new UpdateUserRequest();
@@ -230,7 +230,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void updatePassword() {
+    void testUpdatePassword() {
         //given
         NewPasswordRequest newPasswordRequest = new NewPasswordRequest(1, "12345", "67890");
         User user = new User(1, "bobby", "smurda", "1234567899", "bobby@gmial.com", "12345", AccountType.USER);
@@ -250,7 +250,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void updatePasswordWrongPassword(){
+    void testUpdatePassword_throwsRuntimeException_whenCurrentPasswordIsWrong(){
         //given
         NewPasswordRequest newPasswordRequest = new NewPasswordRequest(1, "12345", "67890");
         User user = new User();
@@ -269,7 +269,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void updatePasswordUserNull(){
+    void testupdatePassword_throwsRuntimeException_whenUserIsNull(){
         //given
         NewPasswordRequest newPasswordRequest = new NewPasswordRequest(1, "12345", "67890");
         User user = new User();
@@ -288,7 +288,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void deleteUserById() {
+    void testDeleteUserById() {
         //given
         User user = new User(1,"bobby","smurda","1234567899","bobby@gmail.com","12345", AccountType.USER);
 
@@ -305,7 +305,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void deleteUserByIdUserNull() {
+    void testDeleteUserById_throwsRuntimeException_whenUserIsNull() {
         //given
         User user = new User();
 

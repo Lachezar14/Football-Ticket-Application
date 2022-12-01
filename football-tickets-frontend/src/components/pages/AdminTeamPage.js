@@ -8,16 +8,21 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import {useEffect, useState} from "react";
 import teamsService from "../../services/teamsService";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
  import {FormHelperText} from "@mui/material";
+ import Alert from "@mui/material/Alert";
 
 
 export default function AdminTeamPage() {
 
     const [teams, setTeams] = React.useState([]);
+    const [alert, setAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState('');
     const [createTeamErrorMessage, setCreateTeamErrorMessage] = useState('');
     const [updateTeamErrorMessage, setUpdateTeamErrorMessage] = useState('');
     const [deleteTeamErrorMessage, setDeleteTeamErrorMessage] = useState('');
+
+    let navigate = useNavigate();
 
     useEffect(() => {
         teamsService.getTeams().then(res => setTeams(res.data));
@@ -37,6 +42,12 @@ export default function AdminTeamPage() {
         console.log(team);
         teamsService.deleteTeam(ID).then((response) => {
             console.log("Team deleted successfully", response.data);
+            setAlert(true);
+            window.scroll(0,0);
+            setAlertContent("Team deleted successfully");
+            setTimeout(() => {
+                navigate('/admin');
+            }, 2000);
         }).catch((e) => {
             setDeleteTeamErrorMessage(e.response.data.message);
         });
@@ -58,7 +69,12 @@ export default function AdminTeamPage() {
         console.log(updatedTeam);
         teamsService.updateTeam(updatedTeam).then((response) => {
             console.log("Team updated successfully", response.data);
-            window.location.reload();
+            setAlert(true);
+            window.scroll(0,0);
+            setAlertContent("Team updated successfully");
+            setTimeout(() => {
+                navigate('/admin');
+            }, 2000);
         }).catch ((e) => {
             setUpdateTeamErrorMessage(e.response.data.message);
         });
@@ -78,6 +94,12 @@ export default function AdminTeamPage() {
         console.log(team);
         teamsService.saveTeam(team).then((response) => {
             console.log("TEAM created successfully", response.data);
+            setAlert(true);
+            window.scroll(0,0);
+            setAlertContent("Team created successfully");
+            setTimeout(() => {
+                navigate('/admin');
+            }, 2000);
         }).catch((e) => {
             setCreateTeamErrorMessage(e.response.data.message);
         });
@@ -85,6 +107,8 @@ export default function AdminTeamPage() {
 
 
     return (
+        <>
+            {alert ? <Alert severity='success'>{alertContent}</Alert> : <></> }
         <Box sx={{ flexGrow: 1,mt: 7,ml: 5,mr: 5 }}>
             <Box
                 sx={{
@@ -302,5 +326,6 @@ export default function AdminTeamPage() {
                 </Grid>
             </Grid>
         </Box>
+        </>
     );
 }

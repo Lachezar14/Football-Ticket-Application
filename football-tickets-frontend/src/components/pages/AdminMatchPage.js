@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,8 +14,10 @@ import MenuItem from "@mui/material/MenuItem";
 import {useEffect, useState} from "react";
 import teamsService from "../../services/teamsService";
 import matchService from "../../services/matchService";
-import {Link} from "react-router-dom";
-import {FormHelperText} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
+import {Autocomplete, FormHelperText} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
 
 
 export default function AdminMatchPage() {
@@ -29,14 +32,22 @@ export default function AdminMatchPage() {
         matchService.getMatches().then(res => setMatches(res.data));
     },  []);
 
+
+    const [alert, setAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState('');
     const [homeTeam, setHomeTeam] = React.useState('');
     const [awayTeam, setAwayTeam] = React.useState('');
     const [date, setDate] = React.useState(dayjs());
     const [newMatch, setNewMatch] = React.useState([]);
     const [updateMatch, setUpdateMatch] = React.useState([]);
+    const [updateDate, setUpdateDate] = React.useState();
+    const [updateHomeTeam, setUpdateHomeTeam] = React.useState('');
+    const [updateAwayTeam, setUpdateAwayTeam] = React.useState('');
     const [createMatchErrorMessage, setCreateMatchErrorMessage] = useState('');
     const [updateMatchErrorMessage, setUpdateMatchErrorMessage] = useState('');
     const [deleteMatchErrorMessage, setDeleteMatchErrorMessage] = useState('');
+
+    let navigate = useNavigate();
 
     const matchHandleChange = (event) => {
         setNewMatch(event.target.value);
@@ -44,6 +55,9 @@ export default function AdminMatchPage() {
 
     const updateMatchHandleChange = (event) => {
         setUpdateMatch(event.target.value);
+        setUpdateHomeTeam(event.target.value.home_team.id);
+        setUpdateAwayTeam(event.target.value.away_team.id);
+        setUpdateDate(event.target.value.date);
     }
 
     const homeTeamHandleChange = (event) => {
@@ -54,9 +68,20 @@ export default function AdminMatchPage() {
         setAwayTeam(event.target.value);
     };
 
+    const updateHomeTeamHandleChange = (event) => {
+        setUpdateHomeTeam(event.target.value);
+    };
 
+    const updateAwayTeamHandleChange = (event) => {
+        setUpdateAwayTeam(event.target.value);
+    };
+    
     const dateHandleChange = (newValue) => {
         setDate(newValue);
+    };
+
+    const updateDateHandleChange = (newValue) => {
+        setUpdateDate(newValue);
     };
     
     const handleNewMatchSubmit = (event) => {
@@ -74,6 +99,12 @@ export default function AdminMatchPage() {
         console.log(match);
         matchService.saveMatch(match).then((response) => {
             console.log("MATCH created successfully", response.data);
+            setAlert(true);
+            window.scroll(0,0);
+            setAlertContent('Match created successfully');
+            setTimeout(() => {
+                navigate('/admin');
+            }, 2000);
         }).catch((error) => {
             setCreateMatchErrorMessage(error.response.data.message);
         });
@@ -85,8 +116,8 @@ export default function AdminMatchPage() {
 
         const match = {
             date: date,
-            home_team: homeTeam,
-            away_team: awayTeam,
+            home_team: teams.find(team => team.id === updateHomeTeam),
+            away_team: teams.find(team => team.id === updateAwayTeam),
             ticket_number: data.get('tickets_number'),
             ticket_price: data.get('ticket_price'),
 
@@ -94,6 +125,12 @@ export default function AdminMatchPage() {
         console.log(match);
         matchService.updateMatch(match).then((response) => {
             console.log("MATCH updated successfully", response.data);
+            setAlert(true);
+            window.scroll(0,0);
+            setAlertContent('Match updated successfully');
+            setTimeout(() => {
+                navigate('/admin');
+            }, 2000);
         }).catch((error) => {
             setUpdateMatchErrorMessage(error.response.data.message);
         });
@@ -106,6 +143,12 @@ export default function AdminMatchPage() {
         console.log(ID);
         matchService.deleteMatch(ID).then((response) => {
             console.log("Match deleted successfully", response.data);
+            setAlert(true);
+            window.scroll(0,0);
+            setAlertContent('Match deleted successfully');
+            setTimeout(() => {
+                navigate('/admin');
+            }, 2000);
         }).catch((error) => {
             setDeleteMatchErrorMessage(error.response.data.message);
         });
@@ -113,7 +156,18 @@ export default function AdminMatchPage() {
 
 
     return (
-        <Box sx={{ flexGrow: 1,mt: 7,ml: 5,mr: 5 }}>
+        <>
+            {alert ? <Alert severity='success'>{alertContent}</Alert> : <></> }
+            
+            {/* TODO work on it after ux feedback
+            <IconButton component={Link} to="/admin">
+                <Box sx={{display:'flex',flexDirection:'column'}}>
+                    <ArrowBackIosIcon />
+                    <Typography>Go Back</Typography>
+                </Box>
+            </IconButton>
+            */}
+            <Box sx={{ flexGrow: 1,mt: 7,ml: 5,mr: 5 }}>
             <Box
                 sx={{
                     mb: 7,
@@ -136,6 +190,7 @@ export default function AdminMatchPage() {
                         borderRadius: '10px',
                         boxShadow: 3,
                     }}>
+                        {/* CREATING NEW MATCH*/}
                         <Box sx={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -228,6 +283,7 @@ export default function AdminMatchPage() {
                             borderRadius: '10px',
                             boxShadow: 3,
                         }}>
+                            {/* DELETING A MATCH*/}
                             <Box sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
@@ -276,6 +332,7 @@ export default function AdminMatchPage() {
                         borderRadius: '10px',
                         boxShadow: 3,
                     }}>
+                        {/* UPDATING A MATCH*/}
                         <Box sx={{
                             display:'flex',
                             flexDirection:'column',
@@ -310,8 +367,8 @@ export default function AdminMatchPage() {
                                         fullWidth
                                         name="date"
                                         label="Date and Time"
-                                        value={date}
-                                        onChange={dateHandleChange}
+                                        value={updateDate}
+                                        onChange={updateDateHandleChange}
                                         renderInput={(params) => <TextField {...params} />}
                                     />
                                 </LocalizationProvider>
@@ -322,14 +379,11 @@ export default function AdminMatchPage() {
                                     fullWidth
                                     select
                                     label="Home Team"
-                                    key={updateMatch.home_team}
-                                    defaultValue={updateMatch.home_team}
-                                    //value={updateMatch.home_team}
-                                    onChange={homeTeamHandleChange}
-                                    sx={{mt: 3}}
+                                    value={updateHomeTeam}
+                                    onChange={updateHomeTeamHandleChange}
                                 >
                                     {teams.map((team) => (
-                                        <MenuItem key={team.id} value={team}>
+                                        <MenuItem key={team.id} value={team.id}>
                                             {team.name}
                                         </MenuItem>
                                     ))}
@@ -341,12 +395,11 @@ export default function AdminMatchPage() {
                                     fullWidth
                                     select
                                     label="Away Team"
-                                    defaultValue={updateMatch.away_team}
-                                    //value={awayTeam}
-                                    onChange={awayTeamHandleChange}
+                                    value={updateAwayTeam}
+                                    onChange={updateAwayTeamHandleChange}
                                 >
                                     {teams.map((team) => (
-                                        <MenuItem key={team.id} value={team}>
+                                        <MenuItem key={team.id} value={team.id}>
                                             {team.name}
                                         </MenuItem>
                                     ))}
@@ -392,5 +445,6 @@ export default function AdminMatchPage() {
                 </Grid>
             </Grid>
         </Box>
+        </>
     );
 }

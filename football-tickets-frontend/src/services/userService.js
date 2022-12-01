@@ -1,4 +1,5 @@
 ﻿import axios from "axios";
+import authHeader from "./authHeader";
 
 const usersURL = "http://localhost:8080/api";
 
@@ -18,11 +19,20 @@ const getAllUsers = () => {
 
 const getUserByEmail = (email) => {
     try {
-        return axios.get(`${usersURL}/email/${email}`);
+        return axios.get(`${usersURL}/email/${email}`, { headers: authHeader() });
     } catch (error) {
         console.log('Error while calling getUser services ', error);
     }
 }
+
+{/* TODO uncomment in the authenticate issue
+const getUserByEmail = (email) => {
+    try {
+        return axios.get(`${usersURL}/email/${email}`, { headers: authHeader() });
+    } catch (error) {
+        console.log('Error while calling getUser services ', error);
+    }
+}*/}
 
 const updateUser = (updateRequest) => {
     return axios.put(`${usersURL}/update`, updateRequest)

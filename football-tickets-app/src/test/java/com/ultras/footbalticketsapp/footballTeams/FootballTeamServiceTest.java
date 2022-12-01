@@ -89,7 +89,7 @@ public class FootballTeamServiceTest {
     }
 
     @Test
-    void getTeamById(){
+    void testGetTeamById(){
         //given
         Stadium stadium = new Stadium(1, "stadium", 100);
         FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
@@ -106,7 +106,7 @@ public class FootballTeamServiceTest {
     }
 
     @Test
-    void getAllTeams(){
+    void testGetAllTeams(){
         //when
         teamService.getAllFootballTeams();
         //then
@@ -114,7 +114,7 @@ public class FootballTeamServiceTest {
     }
 
     @Test
-    void updateFootballTeam(){
+    void testUpdateFootballTeam(){
         //given
         Stadium stadium = new Stadium(1, "stadium", 100);
         FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
@@ -143,7 +143,7 @@ public class FootballTeamServiceTest {
     }
 
     @Test
-    void updateFootballTeam_throwsIllegalStateException_whenTeamIsNull(){
+    void testUpdateFootballTeam_throwsIllegalStateException_whenTeamIsNull(){
         //given
         Stadium stadium = new Stadium();
         FootballTeamResponse toUpdate = new FootballTeamResponse(1, "Name", stadium);
@@ -158,7 +158,7 @@ public class FootballTeamServiceTest {
     }
 
    @Test
-    void deleteFootballTeam(){
+    void testDeleteFootballTeam(){
         //given
         Stadium stadium = new Stadium(1, "stadium", 100);
         FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
@@ -176,7 +176,7 @@ public class FootballTeamServiceTest {
     }
 
     @Test
-    void deleteFootballTeam_throwsIllegalStateException_whenTeamIsNull(){
+    void testDeleteFootballTeam_throwsIllegalStateException_whenTeamIsNull(){
         //given
         Stadium stadium = new Stadium();
         FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
@@ -191,7 +191,7 @@ public class FootballTeamServiceTest {
     }
 
     @Test
-    void updateStadium(){
+    void testUpdateStadium(){
         //given
         Stadium stadium = new Stadium(1, "stadium", 100);
         Stadium updatedStadium = new Stadium(1, "stadium1", 120);
@@ -211,7 +211,7 @@ public class FootballTeamServiceTest {
     }
 
     @Test
-    void updateStadium_throwsIllegalStateException_whenStadiumIsNull(){
+    void testUpdateStadium_throwsIllegalStateException_whenStadiumIsNull(){
         //given
         Stadium stadium = new Stadium();
 

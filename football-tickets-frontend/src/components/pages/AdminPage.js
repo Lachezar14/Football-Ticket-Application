@@ -1,6 +1,5 @@
 ﻿import * as React from 'react';
 import Box from '@mui/material/Box';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Grid from '@mui/material/Grid';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Typography from "@mui/material/Typography";
@@ -9,53 +8,96 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import {useEffect, useState} from "react";
-import teamsService from "../../services/teamsService";
 import userService from "../../services/userService";
-import api from "../../services/api";
 import {Link} from "react-router-dom";
 import {FormHelperText} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Api from "../../services/api";
 
 
 export default function AdminPage() {
 
+    const user = Api.getCurrentUser();
+    console.log(user);
+
+    const [alert, setAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState('');
     const [users, setUsers] = React.useState([]);
-    const [user, setUser] = React.useState('');
+    const [userToAdmin, setUserToAdmin] = React.useState('');
     const[updateUserErrorMessage, setUpdateUserErrorMessage] = React.useState('');
     const[updatePasswordErrorMessage, setUpdatePasswordErrorMessage] = React.useState('');
+    const[makeUserAdminErrorMessage, setMakeUserAdminErrorMessage] = React.useState('');
 
     useEffect(() => {
         userService.getAllUsers().then(res => setUsers(res.data));
     },  []);
 
     const userHandleChange = (event) => {
-        setUser(event.target.value);
+        setUserToAdmin(event.target.value);
     };
 
-    const handleLogOutSubmit = (event) => {
+    const handleLogOutSubmit = () => {
         sessionStorage.removeItem("user");
+        sessionStorage.removeItem("token");
         window.location.href = "/";
     };
 
-    const handleSubmit = (event) => {
+    const handleUpdateProfileSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+        const updateRequest = {
+            id: userToAdmin.id,
+            first_name: data.get('first_name'),
+            last_name: data.get('last_name'),
+            phone_number: data.get('phone_number'),
+            email: data.get('username'),
+        }
+
+        userService.updateUser(updateRequest).then((response) => {
+            console.log("User updated successfully", response.data);
+            sessionStorage.setItem("user", JSON.stringify(response.data));
+            setAlert(true);
+            setAlertContent('Profile updated successfully!');
+            setTimeout(window.location.reload.bind(window.location), 1000);
+        }).catch((error) => {
+            setUpdateUserErrorMessage(error.response.data.message);
         });
     };
 
     const handleMakeAdminSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        //console.log(user);
-        userService.makeAdmin(user).then((response) => {
+        userService.makeAdmin(userToAdmin).then((response) => {
             console.log("USER made admin successfully", response.data);
+            setAlert(true);
+            window.scroll(0, 0);
+            setAlertContent('User made admin successfully!');
+        }).catch((error) => {
+            setMakeUserAdminErrorMessage(error.response.data.message);
         });
     };
 
+    const handleUpdatePasswordSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const object = {
+            id: userToAdmin.id,
+            current_password: data.get("current_password"),
+            new_password: data.get("new_password")
+        }
+        userService.updatePassword(object).then((res) => {
+            setAlert(true);
+            setAlertContent('Password changed successfully!');
+            setTimeout(window.location.reload.bind(window.location), 1000);
+        }).catch((error) => {
+            setUpdatePasswordErrorMessage(error.response.data.message);
+        })
+    };
+
     return (
-        <Box sx={{ flexGrow: 1,mt: 7,ml: 5,mr: 5 }}>
+        <>
+            {alert ? <Alert severity='success'>{alertContent}</Alert> : <></> }
+            <Box sx={{ flexGrow: 1,mt: 7,ml: 5,mr: 5 }}>
             <Box sx={{
                 mb: 7,
                 display: 'flex',
@@ -98,9 +140,9 @@ export default function AdminPage() {
                                 fontSize: 170,
                             }}/>
                             <Typography component="h1" variant="h4" sx={{mb:5}}>
-                                Charles LeClair
+                                {user.first_name} {user.last_name}
                             </Typography>
-                            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
+                            <Box component="form" onSubmit={handleUpdateProfileSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -108,6 +150,7 @@ export default function AdminPage() {
                                     label="First Name"
                                     name="first_name"
                                     autoComplete="given-name"
+                                    defaultValue={user.first_name}
                                     autoFocus
                                 />
                                 <TextField
@@ -117,6 +160,7 @@ export default function AdminPage() {
                                     label="Last Name"
                                     name="last_name"
                                     autoComplete="family-name"
+                                    defaultValue={user.last_name}
                                     autoFocus
                                 />
                                 <TextField
@@ -126,6 +170,7 @@ export default function AdminPage() {
                                     label="Phone Number"
                                     name="phone_number"
                                     autoComplete="phone-number"
+                                    defaultValue={user.phone_number}
                                     autoFocus
                                 />
                                 <TextField
@@ -135,6 +180,7 @@ export default function AdminPage() {
                                     label="Email Address"
                                     name="username"
                                     autoComplete="username"
+                                    defaultValue={user.email}
                                     autoFocus
                                 />
                                 <Button
@@ -174,7 +220,7 @@ export default function AdminPage() {
                                 <Typography component="h1" variant="h4" sx={{mt: 5,mb: 2}}>
                                     Change Password
                                 </Typography>
-                                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
+                                <Box component="form" onSubmit={handleUpdatePasswordSubmit} noValidate sx={{ mt: 1,mr: 25,ml: 25 }}>
                                     <TextField
                                         margin="normal"
                                         required
@@ -239,7 +285,7 @@ export default function AdminPage() {
                                     fullWidth
                                     select
                                     label="User"
-                                    value={user}
+                                    value={userToAdmin}
                                     onChange={userHandleChange}
                                 >
                                     {users.map((user) => (
@@ -256,6 +302,11 @@ export default function AdminPage() {
                                 >
                                     Make Admin
                                 </Button>
+                                <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                                    <FormHelperText error sx={{ fontSize: '25px'}}>
+                                        {makeUserAdminErrorMessage}
+                                    </FormHelperText>
+                                </Box>
                             </Box>
                         </Box>
                     </Card>
@@ -275,5 +326,6 @@ export default function AdminPage() {
                 </Grid>
             </Grid>
         </Box>
+        </>
     );
 }

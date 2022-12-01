@@ -1,21 +1,18 @@
 ﻿import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import ticketService from "../../services/ticketService";
 import userService from "../../services/userService";
-import jwt_decode from "jwt-decode";
 import Api from "../../services/api";
 import {FormHelperText} from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 
 export default function ProfilePage() {
@@ -24,6 +21,8 @@ export default function ProfilePage() {
     console.log(user);
     
     const [tickets, setTickets] = useState([]);
+    const [alert, setAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState('');
     const [updateProfileErrorMessage, setUpdateProfileErrorMessage] = useState('');
     const [updatePasswordErrorMessage, setUpdatePasswordErrorMessage] = useState('');
     
@@ -46,11 +45,13 @@ export default function ProfilePage() {
             phone_number: data.get('phone_number'),
             email: data.get('username'),
         }
-            
+        
         userService.updateUser(updateRequest).then((response) => {
             console.log("User updated successfully", response.data);
             sessionStorage.setItem("user", JSON.stringify(response.data));
-            window.location.reload();
+            setAlert(true);
+            setAlertContent('Profile updated successfully!');
+            setTimeout(window.location.reload.bind(window.location), 1000);
         }).catch((error) => {
             setUpdateProfileErrorMessage(error.response.data.message);
         });
@@ -71,13 +72,17 @@ export default function ProfilePage() {
             new_password: data.get("new_password")
         }
         userService.updatePassword(object).then((res) => {
-            window.location.reload();
+            setAlert(true);
+            setAlertContent('Password changed successfully!');
+            setTimeout(window.location.reload.bind(window.location), 1000);
         }).catch((error) => {
             setUpdatePasswordErrorMessage(error.response.data.message);
         })
     };
     
     return (
+        <>
+            {alert ? <Alert severity='success'>{alertContent}</Alert> : <></> }    
         <Box sx={{ flexGrow: 1,mt: 15,ml: 5,mr: 5 }}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
@@ -261,6 +266,7 @@ export default function ProfilePage() {
                 </Grid>
             </Grid>
         </Box>
+        </>
     );
 }
 

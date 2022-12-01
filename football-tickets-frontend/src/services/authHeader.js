@@ -1,6 +1,6 @@
 ﻿const authHeader = () => {
 
-    const access_token = JSON.parse(sessionStorage.getItem('user')).tokens.access_token;
+    const access_token = JSON.parse(sessionStorage.getItem('token'));
     if (access_token) {
         return {
             Authorization: 'Bearer ' + access_token,

@@ -29,7 +29,7 @@ function App() {
                     <Route path="/login" element={<SignInPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path='/profile' element={<ProfilePage/>} />
-                    <Route path='profile/chat' element={<GroupChatPage />} />
+                    <Route path='/chat' element={<GroupChatPage />} />
                     <Route path='/admin' element={<AdminPage/>} />
                     <Route path='/admin/matches' element={<AdminMatchPage/>} />
                     <Route path='/admin/teams' element={<AdminTeamPage/>} />
