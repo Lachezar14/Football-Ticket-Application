@@ -40,6 +40,10 @@ class  MatchServiceTest {
         matchService = new MatchServiceImpl(matchRepository, matchMapper);
     }
 
+
+    /**
+     * Method under test: {@link MatchServiceImpl#saveMatch(NewMatchRequest)}
+     */
     @Test
     void testSaveMatch() {
         //given
@@ -65,6 +69,9 @@ class  MatchServiceTest {
         verify(matchMapper).matchToMatchResponse((Match) any());
     }
 
+    /**
+     * Method under test: {@link MatchServiceImpl#saveMatch(NewMatchRequest)}
+     */
     @Test
     void testSaveMatch_throwsRuntimeException_whenMatchAlreadyExists(){
         //given
@@ -86,6 +93,9 @@ class  MatchServiceTest {
                 .hasMessageContaining("Match already exists");
     }
 
+    /**
+     * Method under test: {@link MatchServiceImpl#saveMatch(NewMatchRequest)}
+     */
     @Test
     void testSaveMatch_throwsRuntimeException_whenMatchHomeTeamAndAwayTeamAreSame(){
         //given
@@ -97,7 +107,7 @@ class  MatchServiceTest {
 
         //when
         when(matchMapper.newMatchRequestToMatch(any())).thenReturn(match);
-        when(matchRepository.findByHomeTeamAndAwayTeamAndDate(anyInt(), anyInt(), any(Date.class))).thenReturn(match);
+        //when(matchRepository.findByHomeTeamAndAwayTeamAndDate(anyInt(), anyInt(), any(Date.class))).thenReturn(match);
 
         //then
         assertThatThrownBy(() -> matchService.saveMatch(newMatchRequest))
@@ -105,6 +115,10 @@ class  MatchServiceTest {
                 .hasMessageContaining("Home team and away team cannot be the same");
     }
 
+
+    /**
+     * Method under test: {@link MatchServiceImpl#getMatchById(int)}
+     */
     @Test
     void testGetMatchById() {
         //given
@@ -150,13 +164,15 @@ class  MatchServiceTest {
         FootballTeam footballTeam3 = new FootballTeam(2, "OtherSomeName", stadium3);
         Date now1 = new Date(); //return current date and time
         Match updatedMatch = new Match(2,footballTeam2, footballTeam3, now1, 110,12.0);
-        MatchResponse updatedMatchResponse = new MatchResponse();
+
+        MatchResponse updatedMatchResponse = new MatchResponse(1,footballTeam2, footballTeam3, now1, 110,12.0);
 
         //when
         when(matchRepository.findById((Integer) any())).thenReturn(Optional.of(matchToUpdate));
         when(matchRepository.save((Match) any())).thenReturn(updatedMatch);
         when(matchMapper.matchToMatchResponse((Match) any())).thenReturn(updatedMatchResponse);
         when(matchMapper.matchResponseToMatch((MatchResponse) any())).thenReturn(updatedMatch);
+
 
         //then
         assertSame(updatedMatchResponse, matchService.updateMatch(updatedMatchResponse));
