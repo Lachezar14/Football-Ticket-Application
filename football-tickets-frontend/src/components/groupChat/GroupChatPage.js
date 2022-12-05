@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import {over} from "stompjs";
 import SockJs from "sockjs-client";
-import api from "../../services/api";
+import api from "../../services/authenticationService";
 import {colors} from "@mui/material";  
 import {useEffect, useState} from "react";
 import TextField from "@mui/material/TextField";

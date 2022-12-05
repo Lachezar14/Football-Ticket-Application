@@ -87,10 +87,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UsernameNotFoundException("User not found in the database");
         }
 
-        /*Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });*/
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
@@ -108,7 +104,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(userToUpdate == null){
             throw new RuntimeException("User not found");
         }
-        if(userRepository.findByEmail(updateUserRequest.getEmail()) != null){
+        if(userRepository.findByEmail(updateUserRequest.getEmail()) != null && !userToUpdate.getEmail().equals(updateUserRequest.getEmail())){
             throw new RuntimeException("Email already in use");
         }
         userToUpdate.setFirst_name(updateUserRequest.getFirst_name());

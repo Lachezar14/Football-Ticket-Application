@@ -252,6 +252,7 @@ export default function AdminMatchPage() {
                                     name="tickets_number"
                                     autoComplete="tickets-number"
                                     autoFocus
+                                    helperText="max available amount: {homeTeam.stadium.capacity}"
                                 />
                                 <TextField
                                     margin="normal"

@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import Api from "../services/api";
+import Api from "../services/authenticationService";
 import {Link} from "react-router-dom";
 
 const pages =

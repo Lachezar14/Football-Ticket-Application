@@ -17,29 +17,20 @@ const getAllUsers = () => {
     }
 }
 
-const getUserByEmail = (email) => {
+const getUserByEmail = async (email) => {
     try {
-        return axios.get(`${usersURL}/email/${email}`, { headers: authHeader() });
+        return await axios.get(`${usersURL}/email/${email}`, { headers: authHeader() });
     } catch (error) {
         console.log('Error while calling getUser services ', error);
     }
 }
 
-{/* TODO uncomment in the authenticate issue
-const getUserByEmail = (email) => {
-    try {
-        return axios.get(`${usersURL}/email/${email}`, { headers: authHeader() });
-    } catch (error) {
-        console.log('Error while calling getUser services ', error);
-    }
-}*/}
-
 const updateUser = (updateRequest) => {
-    return axios.put(`${usersURL}/update`, updateRequest)
+    return axios.put(`${usersURL}/${updateRequest.id}`, updateRequest, { headers: authHeader() });
 }
 
 const updatePassword = (object) => {
-    return axios.put(`${usersURL}/new-password`, object)
+    return axios.put(`${usersURL}/new-password`, object, { headers: authHeader() });
 }
 
 export default {

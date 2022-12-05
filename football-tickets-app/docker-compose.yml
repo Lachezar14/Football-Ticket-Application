@@ -1,0 +1,29 @@
+version: "3"
+services:
+  backend:
+    container_name: backend-container
+    image: backend
+    ports:
+      - "8080:8080"
+    networks:
+      - backend-mysql
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    container_name: mysqldb-container
+    image: mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - backend-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=itrips
+    volumes:
+      - my-datavolume:/var/lib/mysql
+
+volumes:
+  my-datavolume:
+networks:
+  backend-mysql:
