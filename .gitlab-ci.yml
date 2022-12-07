@@ -29,7 +29,7 @@ build:
   stage: build 
   script:
       - cd football-tickets-app
-      - ./gradlew assemble 
+      - ./gradlew assemble -x test 
 
 test: 
   stage: test 
