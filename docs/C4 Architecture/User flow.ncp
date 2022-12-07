@@ -1,0 +1,88 @@
+<Project>
+  <Name>User flow</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>User</Name>
+        <Access>Public</Access>
+        <Location left="983" top="895" />
+        <Size width="162" height="196" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int id</Member>
+        <Member type="Field">string first_name</Member>
+        <Member type="Field">string last_name</Member>
+        <Member type="Field">string phine_number</Member>
+        <Member type="Field">string email</Member>
+        <Member type="Field">string password</Member>
+        <Member type="Field">AccountType role</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Enum">
+        <Name>AccountType</Name>
+        <Access>Public</Access>
+        <Location left="451" top="917" />
+        <Size width="162" height="103" />
+        <Collapsed>False</Collapsed>
+        <Value>USER</Value>
+        <Value>ADMIN</Value>
+      </Entity>
+      <Entity type="Class">
+        <Name>UserServiceImpl</Name>
+        <Access>Public</Access>
+        <Location left="451" top="423" />
+        <Size width="656" height="332" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">UserRepository userRepository</Member>
+        <Member type="Field">BCryptPasswordEncoder bCryptPasswordEncoder</Member>
+        <Member type="Field">UserMapper userMapper</Member>
+        <Member type="Constructor">public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserMapper userMapper)</Member>
+        <Member type="Method">public UserDTO registerUser(RegisterUserRequest user)</Member>
+        <Member type="Method">public void makeUserAdmin(UserDTO user)</Member>
+        <Member type="Method">public UserDTO getUserById(int userId)</Member>
+        <Member type="Method">public serDTO getUserByEmail(String email)</Member>
+        <Member type="Method">public List&lt;UserDTO&gt; getAllUsers()</Member>
+        <Member type="Method">public UserDetails loadUserByUsername(String username)</Member>
+        <Member type="Method">public List&lt;UserDTO&gt; getAllUsers()</Member>
+        <Member type="Method">public UserDTO updateUser(UpdateUserRequest updateUserRequest)</Member>
+        <Member type="Method">public boolean updatePassword(NewPasswordRequest newPasswordRequest)</Member>
+        <Member type="Method">public void deleteUserById(int userId)</Member>
+        <Member type="Method">public void refreshToken(HttpServletRequest request, HttpServletResponse response)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>UserRepository</Name>
+        <Access>Public</Access>
+        <Location left="895" top="1215" />
+        <Size width="324" height="62" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>UserService</Name>
+        <Access>Public</Access>
+        <Location left="1348" top="482" />
+        <Size width="433" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">UserDTO registerUser(RegisterUserRequest user)</Member>
+        <Member type="Method">void makeUserAdmin(UserDTO user)</Member>
+        <Member type="Method">UserDTO getUserById(int userId)</Member>
+        <Member type="Method">UserDTO getUserByEmail(String email)</Member>
+        <Member type="Method">List&lt;UserDTO&gt; getAllUsers()</Member>
+        <Member type="Method">UserDTO updateUser(UpdateUserRequest updateUserRequest)</Member>
+        <Member type="Method">boolean updatePassword(NewPasswordRequest newPasswordRequest)</Member>
+        <Member type="Method">void deleteUserById(int userId)</Member>
+        <Member type="Method">void refreshToken(HttpServletRequest request, HttpServletResponse response)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>UserController</Name>
+        <Access>Public</Access>
+        <Location left="887" top="35" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships />
+  </ProjectItem>
+</Project>

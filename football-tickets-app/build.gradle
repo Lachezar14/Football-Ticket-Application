@@ -53,3 +53,9 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar {
+	manifest {
+		attributes 'FootbalTicketsAppApplication': 'com.ultras.footbalticketsapp.FootbalTicketsAppApplication'
+	}
+}

@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  docker-mysql:
+    image: mysql:latest
+    container_name: mysqldb-container
+    environment:
+      - MYSQL_ROOT_PASSWORD=lucho
+      - MYSQL_DATABASE=ultras-db
+      - MYSQL_USER=lucho
+      - MYSQL_PASSWORD=lucho
+    ports:
+      - "3308:3306"
+
+  ultras:
+    image: backend:v1
+    container_name: backend-container
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/ultras-db?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      - docker-mysql
+
+  frontend:
+    image: frontend:v1
+    container_name: frontend-container
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - ultras

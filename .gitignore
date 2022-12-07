@@ -1,3 +1,7 @@
+
+.mysql/
+data/
+
 HELP.md
 .gradle
 build/
