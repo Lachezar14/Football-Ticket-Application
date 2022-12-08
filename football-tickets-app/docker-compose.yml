@@ -10,7 +10,7 @@ services:
       - MYSQL_USER=lucho
       - MYSQL_PASSWORD=lucho
     ports:
-      - "3308:3306"
+      - "3306:3306"
 
   ultras:
     image: backend:v1
