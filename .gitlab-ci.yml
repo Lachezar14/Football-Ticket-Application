@@ -24,6 +24,7 @@ variables:
 stages: 
   - build 
   - test
+  - deploy
 
 build: 
   stage: build 
@@ -43,3 +44,8 @@ sonarqube:
       - cd football-tickets-app
       - ./gradlew sonarqube
 
+deploy:
+    stage: deploy
+    script:
+        - cd football-tickets-app
+        - docker compose up -d --build
