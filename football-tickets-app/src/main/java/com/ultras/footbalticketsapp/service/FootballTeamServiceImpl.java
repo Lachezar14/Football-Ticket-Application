@@ -81,23 +81,4 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         toUpdate.setCapacity(stadium.getCapacity());
         stadiumRepository.save(toUpdate);
     }
-
-    //TODO remove because it is in the saveTeam method
-//    @Override
-//    public Stadium saveStadium(Stadium stadium) {
-//        return stadiumRepository.save(stadium);
-//    }
-
-    //TODO remove because it is not used
-//    @Override
-//    public Stadium getStadiumById(int id) {
-//        return stadiumRepository.findById(id).orElse(null);
-//    }
-//
-//    //TODO remove because it is redundant
-//    @Override
-//    public void deleteStadium(int id) {
-//        Stadium stadium = stadiumRepository.findById(id).orElse(null);
-//        stadiumRepository.delete(stadium);
-//    }
 }

@@ -8,8 +8,6 @@ import com.ultras.footbalticketsapp.repository.MatchRepository;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 
@@ -61,7 +59,6 @@ public class MatchServiceImpl implements MatchService {
         if(toUpdate == null){
             throw new RuntimeException("Match not found");
         }
-        //TODO add unit test for this
         if(match.getHome_team().getName() == match.getAway_team().getName()){
             throw new RuntimeException("Home team and away team cannot be the same");
         }

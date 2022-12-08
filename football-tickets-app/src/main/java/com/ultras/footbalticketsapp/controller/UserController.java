@@ -51,20 +51,13 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserById(userId));
     }
 
-    //TODO uncomment cause work
-
-//    @GetMapping("/email/{email}")
-//    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(value = "email") String email){
-//        Object loggedUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if(loggedUser.equals(email)){
-//            return ResponseEntity.ok().body(userService.getUserByEmail(email));
-//        }
-//        return ResponseEntity.status(401).build();
-//    }
-
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(value = "email") String email){
-        return ResponseEntity.ok().body(userService.getUserByEmail(email));
+        Object loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(loggedUserEmail.equals(email)){
+            return ResponseEntity.ok().body(userService.getUserByEmail(email));
+        }
+        return ResponseEntity.status(401).build();
     }
 
     @GetMapping("/users")
@@ -72,9 +65,14 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest){
-        return ResponseEntity.ok().body(userService.updateUser(updateUserRequest));
+    //TODO this works, do for all controllers when renaming the URIs
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest, @PathVariable("userId") int userId){
+        Object loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(loggedUserEmail.equals(updateUserRequest.getEmail())){
+            return ResponseEntity.ok().body(userService.updateUser(updateUserRequest));
+        }
+        return ResponseEntity.status(401).build();
     }
 
     @PutMapping("/new-password")

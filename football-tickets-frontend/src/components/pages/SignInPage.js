@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import api from "../../services/api";
+import api from "../../services/authenticationService";
 import userService from "../../services/userService";
 import jwt_decode from "jwt-decode";
 import {FormHelperText} from "@mui/material";

@@ -50,23 +50,4 @@ public class FootballTeamController {
         footballTeamService.deleteFootballTeam(teamId);
         return "Football team deleted successfully";
     }
-
-    //TODO remove because is in saveTeam method
-//    @PostMapping("/stadium")
-//    public String saveStadium(Stadium stadium){
-//        footballTeamService.saveStadium(stadium);
-//        return "Stadium saved successfully";
-//    }
-
-    //TODO remove because is not used
-//    @GetMapping("/stadium/{stadiumId}")
-//    public Stadium getStadium(@PathVariable("stadiumId") int stadiumId){
-//        return footballTeamService.getStadiumById(stadiumId);
-//    }
-
-//    @DeleteMapping("/stadium/{stadiumId}")
-//    public String deleteStadium(@PathVariable("stadiumId") int stadiumId){
-//        footballTeamService.deleteStadium(stadiumId);
-//        return "Stadium deleted successfully";
-//    }
 }

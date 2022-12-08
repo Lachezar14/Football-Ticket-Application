@@ -50,11 +50,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/login/**","/api/register/**", "/api/token/refresh/**", "/api/data", "/matches/**", "/teams/**", "/tickets/**",
-               "/api/users","/api/**", "/api/statistics","/websocket/**").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**", "/api/token/refresh/**", "/api/data", "/matches/**", "/teams/**", "/tickets/**",
+               "/api/users", "/api/statistics", "/api/**", "/websocket/**").permitAll();
         http.authorizeRequests().antMatchers( "/api/user/**").hasAnyAuthority("USER");
         http.authorizeRequests().antMatchers( "/api/admin/**").hasAnyAuthority("ADMIN");
-;
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);

@@ -104,7 +104,7 @@ public class MatchControllerIntegrationTest {
 
     @Test
     @Disabled
-    //TODO fix when the method in the controller is fixed
+    // TODO fix when the method in the controller is fixed
     void testUpdateMatch() throws Exception {
         when(matchService.updateMatch((MatchResponse) any())).thenReturn(new MatchResponse());
 

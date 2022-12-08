@@ -51,7 +51,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() +30 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                //.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withClaim("role", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
         String refresh_token = JWT.create()
@@ -65,26 +64,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         tokens.put("refresh_token", refresh_token);
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-
-
-        //TODO: add authorities for userDTOs
-//        for(GrantedAuthority authority : user.getAuthorities()){
-//            if(Objects.equals(authority.getAuthority(), "ROLE_ADMIN")){
-//                UserDTO userDTO = userService.getUserDTO(user.getUsername());
-//                userDTO.setTokens(tokens);
-//
-//                response.setContentType(APPLICATION_JSON_VALUE);
-//                new ObjectMapper().writeValue(response.getOutputStream(), userDTO);
-//
-//            }
-//            else if(Objects.equals(authority.getAuthority(), "ROLE_USER")){
-//                com.ultras.footbalticketsapp.model.User user = userService.getUserByEmail(user.getUsername());
-//                user.setTokens(tokens);
-//
-//                response.setContentType(APPLICATION_JSON_VALUE);
-//                new ObjectMapper().writeValue(response.getOutputStream(), user);
-//            }
-//        }
     }
 }
 

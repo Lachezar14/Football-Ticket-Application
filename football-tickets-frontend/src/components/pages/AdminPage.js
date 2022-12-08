@@ -12,7 +12,7 @@ import userService from "../../services/userService";
 import {Link} from "react-router-dom";
 import {FormHelperText} from "@mui/material";
 import Alert from "@mui/material/Alert";
-import Api from "../../services/api";
+import Api from "../../services/authenticationService";
 
 
 export default function AdminPage() {

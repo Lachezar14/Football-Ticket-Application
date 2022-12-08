@@ -44,21 +44,6 @@ class  UserServiceTest {
     }
 
     @Test
-    @Disabled
-    void saveRole() {
-    }
-
-    @Test
-    @Disabled
-    void addRoleToUser() {
-    }
-
-    @Test
-    @Disabled
-    void loadUserByUsername() {
-    }
-
-    @Test
     void testSaveUser() {
         //given
         RegisterUserRequest user = new RegisterUserRequest("bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", "USER");
@@ -269,7 +254,7 @@ class  UserServiceTest {
     }
 
     @Test
-    void testupdatePassword_throwsRuntimeException_whenUserIsNull(){
+    void testUpdatePassword_throwsRuntimeException_whenUserIsNull(){
         //given
         NewPasswordRequest newPasswordRequest = new NewPasswordRequest(1, "12345", "67890");
         User user = new User();

@@ -14,7 +14,4 @@ public interface FootballTeamService {
     FootballTeamResponse updateFootballTeam(FootballTeamResponse footballTeam);
     void deleteFootballTeam(int id);
     void updateStadium(Stadium stadium);
-    //Stadium saveStadium(Stadium stadium);
-    //Stadium getStadiumById(int id);
-    //void deleteStadium(int id);
 }

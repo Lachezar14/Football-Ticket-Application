@@ -55,11 +55,6 @@ public class TicketServiceImpl implements TicketService {
         return ticketMapper.ticketToTicketResponse(ticket);
     }
 
-    /*@Override
-    public List<Ticket> getTicketsByMatchId(int matchId) {
-        return ticketRepository.findAllByMatchId(matchId);
-    }*/
-
     @Override
     public List<TicketResponse> getTicketsByUserId(int userId) {
         return ticketMapper.ticketsToTicketsResponse(ticketRepository.findAllByUserId(userId));
@@ -74,30 +69,4 @@ public class TicketServiceImpl implements TicketService {
     public double getAVGSaleOfTicketsPerTeam(int teamId){
         return ticketRepository.getAVGSaleOfTicketsPerTeam(teamId);
     }
-
-    //TODO remove because ticket data should not be changed
-//
-//    @Override
-//    public TicketResponse updateTicket(TicketResponse ticket) {
-//        Ticket updatedTicket = ticketMapper.ticketResponseToTicket(ticket);
-//        Ticket ticketToUpdate = ticketRepository.findById(ticket.getId()).orElse(null);
-//        if(ticketToUpdate == null){
-//            throw new IllegalStateException("Ticket not found");
-//        }
-//        ticketToUpdate.setMatch(updatedTicket.getMatch());
-//        ticketToUpdate.setBuyer(updatedTicket.getBuyer());
-//        ticketToUpdate.setPrice(updatedTicket.getPrice());
-//        ticketRepository.save(ticketToUpdate);
-//        return ticketMapper.ticketToTicketResponse(ticketToUpdate);
-//    }
-
-    //TODO should be removed because data of every bought ticket should be kept
-//    @Override
-//    public void deleteTicket(int id) {
-//        Ticket ticket = ticketRepository.findById(id).orElse(null);
-//        if(ticket == null){
-//            throw new IllegalStateException("Ticket not found");
-//        }
-//        ticketRepository.delete(ticket);
-//    }
 }
