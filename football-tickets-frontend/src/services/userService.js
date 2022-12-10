@@ -26,7 +26,7 @@ const getUserByEmail = async (email) => {
 }
 
 const updateUser = (updateRequest) => {
-    return axios.put(`${usersURL}/new-password`, updateRequest, { headers: authHeader() });
+    return axios.put(`${usersURL}/${updateRequest.id}`, updateRequest, { headers: authHeader() });
 }
 
 const updatePassword = (object) => {

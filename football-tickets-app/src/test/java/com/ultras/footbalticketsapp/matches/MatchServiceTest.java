@@ -42,7 +42,7 @@ class  MatchServiceTest {
 
 
     /**
-     * Method under test: {@link MatchServiceImpl#saveMatch(NewMatchRequest)}
+     * Method under test: {@link MatchService#saveMatch(Match)}
      */
     @Test
     void testSaveMatch() {
@@ -70,7 +70,7 @@ class  MatchServiceTest {
     }
 
     /**
-     * Method under test: {@link MatchServiceImpl#saveMatch(NewMatchRequest)}
+     * Method under test: {@link MatchService#saveMatch(Match)}
      */
     @Test
     void testSaveMatch_throwsRuntimeException_whenMatchAlreadyExists(){
@@ -94,7 +94,7 @@ class  MatchServiceTest {
     }
 
     /**
-     * Method under test: {@link MatchServiceImpl#saveMatch(NewMatchRequest)}
+     * Method under test: {@link MatchService#saveMatch(Match)}
      */
     @Test
     void testSaveMatch_throwsRuntimeException_whenMatchHomeTeamAndAwayTeamAreSame(){

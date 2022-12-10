@@ -4,6 +4,8 @@ import com.ultras.footbalticketsapp.controller.user.NewPasswordRequest;
 import com.ultras.footbalticketsapp.controller.user.RegisterUserRequest;
 import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
 import com.ultras.footbalticketsapp.controller.user.UserDTO;
+import com.ultras.footbalticketsapp.mapper.UserMapper;
+import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.serviceInterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,49 +30,56 @@ import java.util.Objects;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody RegisterUserRequest user) {
-        UserDTO savedUser = userService.registerUser(user);
+    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody RegisterUserRequest newUser) {
+        User user = userMapper.registerUserRequestToUser(newUser);
+        UserDTO savedUser = userMapper.userToUserDTO(userService.registerUser(user));
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + savedUser.getId()).toUriString());
         return ResponseEntity.created(uri).body(savedUser);
     }
 
     @PutMapping("/admin")
-    public void makeUserAdmin(@RequestBody UserDTO user) {
+    public void makeUserAdmin(@RequestBody UserDTO userDTO) {
+        User user = userMapper.userDTOtoUser(userDTO);
         userService.makeUserAdmin(user);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("userId") int userId){
-        return ResponseEntity.ok().body(userService.getUserById(userId));
+        return ResponseEntity.ok().body(userMapper.userToUserDTO(userService.getUserById(userId)));
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable(value = "email") String email){
         Object loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(loggedUserEmail.equals(email)){
-            return ResponseEntity.ok().body(userService.getUserByEmail(email));
+            return ResponseEntity.ok().body(userMapper.userToUserDTO(userService.getUserByEmail(email)));
         }
         return ResponseEntity.status(401).build();
     }
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers(){
-        return ResponseEntity.ok().body(userService.getAllUsers());
+        return ResponseEntity.ok().body(userMapper.usersToUsersDTO(userService.getAllUsers()));
     }
 
     //TODO this works, do for all controllers when renaming the URIs
+
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest, @PathVariable("userId") int userId){
+        User user = userMapper.updateUserRequestToUser(updateUserRequest);
+        //TODO ask teacher about this because it doesn't work when user wants to update his email
         Object loggedUserEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(loggedUserEmail.equals(updateUserRequest.getEmail())){
-            return ResponseEntity.ok().body(userService.updateUser(updateUserRequest));
+            return ResponseEntity.ok().body(userMapper.userToUserDTO(userService.updateUser(user)));
         }
         return ResponseEntity.status(401).build();
     }

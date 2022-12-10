@@ -1,14 +1,13 @@
 package com.ultras.footbalticketsapp.serviceInterface;
 
-import com.ultras.footbalticketsapp.controller.ticket.BuyTicketRequest;
-import com.ultras.footbalticketsapp.controller.ticket.TicketResponse;
+import com.ultras.footbalticketsapp.model.Ticket;
 
 import java.util.List;
 
 public interface TicketService {
-    TicketResponse buyTicket(BuyTicketRequest ticket);
-    TicketResponse getTicketById(int id);
-    List<TicketResponse> getTicketsByUserId(int userId);
+    Ticket buyTicket(Ticket ticket,int ticketAmount);
+    Ticket getTicketById(int id);
+    List<Ticket> getTicketsByUserId(int userId);
     int countAllByTeamId(int teamId);
     double getAVGSaleOfTicketsPerTeam(int teamId);
 }

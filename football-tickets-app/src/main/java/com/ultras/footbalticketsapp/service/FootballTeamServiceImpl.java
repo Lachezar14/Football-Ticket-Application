@@ -1,7 +1,5 @@
 package com.ultras.footbalticketsapp.service;
 
-import com.ultras.footbalticketsapp.controller.footballTeam.FootballTeamResponse;
-import com.ultras.footbalticketsapp.controller.footballTeam.NewFootballTeamRequest;
 import com.ultras.footbalticketsapp.mapper.FootballTeamMapper;
 import com.ultras.footbalticketsapp.model.FootballTeam;
 import com.ultras.footbalticketsapp.model.Stadium;
@@ -9,7 +7,6 @@ import com.ultras.footbalticketsapp.repository.FootballTeamRepository;
 import com.ultras.footbalticketsapp.repository.StadiumRepository;
 import com.ultras.footbalticketsapp.serviceInterface.FootballTeamService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,41 +24,39 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     @Override
-    public FootballTeamResponse saveFootballTeam(NewFootballTeamRequest newFootballTeamRequest) {
-        FootballTeam footballTeam = footballTeamMapper.newFootballTeamRequestToFootballTeam(newFootballTeamRequest);
+    public FootballTeam saveFootballTeam(FootballTeam footballTeam) {
         if(footballTeamRepository.findByName(footballTeam.getName()) != null){
             throw new RuntimeException("Team already exists");
         }
         Stadium stadium = footballTeam.getStadium();
         stadiumRepository.save(stadium);
         footballTeamRepository.save(footballTeam);
-        return footballTeamMapper.footballTeamToFootballTeamResponse(footballTeam);
+        return footballTeam;
     }
 
     @Override
-    public FootballTeamResponse getFootballTeamById(int id) {
+    public FootballTeam getFootballTeamById(int id) {
         FootballTeam team = footballTeamRepository.findById(id).orElse(null);
-        return footballTeamMapper.footballTeamToFootballTeamResponse(team);
+        return team;
     }
 
     @Override
-    public List<FootballTeamResponse> getAllFootballTeams() {
-        return footballTeamMapper.footballTeamsToFootballTeamsResponse(footballTeamRepository.findAll());
+    public List<FootballTeam> getAllFootballTeams() {
+        return footballTeamRepository.findAll();
     }
 
     @Override
-    public FootballTeamResponse updateFootballTeam(FootballTeamResponse footballTeam) {
+    public FootballTeam updateFootballTeam(FootballTeam footballTeam) {
         FootballTeam toUpdate = footballTeamRepository.findById(footballTeam.getId()).orElse(null);
-        FootballTeam updated = footballTeamMapper.footballTeamResponseToFootballTeam(footballTeam);
         if (toUpdate == null) {
             throw new RuntimeException("Team not found");
         }
-        toUpdate.setName(updated.getName());
-        updateStadium(updated.getStadium());
+        toUpdate.setName(footballTeam.getName());
+        updateStadium(footballTeam.getStadium());
         footballTeamRepository.save(toUpdate);
-        return footballTeamMapper.footballTeamToFootballTeamResponse(toUpdate);
+        return toUpdate;
     }
-    //TODO ask teacher if its good to combine team and stadium crud in one methods
+
     @Override
     public void deleteFootballTeam(int id) {
         FootballTeam footballTeam = footballTeamRepository.findById(id).orElse(null);

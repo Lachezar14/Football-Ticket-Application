@@ -2,6 +2,7 @@ package com.ultras.footbalticketsapp.controller;
 
 import com.ultras.footbalticketsapp.controller.match.MatchResponse;
 import com.ultras.footbalticketsapp.controller.match.NewMatchRequest;
+import com.ultras.footbalticketsapp.mapper.MatchMapper;
 import com.ultras.footbalticketsapp.model.Match;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +19,29 @@ import java.util.List;
 public class MatchController {
 
     private final MatchService matchService;
+    private final MatchMapper matchMapper;
 
     @Autowired
-    public MatchController(MatchService matchService) {
+    public MatchController(MatchService matchService, MatchMapper matchMapper) {
         this.matchService = matchService;
+        this.matchMapper = matchMapper;
     }
 
     @PostMapping("/add")
     public ResponseEntity<MatchResponse> saveMatch(@RequestBody NewMatchRequest match) {
+        Match newMatch = matchMapper.newMatchRequestToMatch(match);
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/matches/").toUriString());
-        return ResponseEntity.created(uri).body(matchService.saveMatch(match));
+        return ResponseEntity.created(uri).body(matchMapper.matchToMatchResponse(matchService.saveMatch(newMatch)));
     }
 
     @GetMapping("/{matchId}")
     public ResponseEntity<MatchResponse> getMatchById(@PathVariable("matchId") int matchId){
-        return ResponseEntity.ok().body(matchService.getMatchById(matchId));
+        return ResponseEntity.ok().body(matchMapper.matchToMatchResponse(matchService.getMatchById(matchId)));
     }
 
     @GetMapping("/")
     public ResponseEntity<List<MatchResponse>> getAllMatches(){
-        return ResponseEntity.ok().body(matchService.getAllMatches());
+        return ResponseEntity.ok().body(matchMapper.matchesToMatchesResponse(matchService.getAllMatches()));
     }
 
     @GetMapping("/team/{teamId}")
@@ -45,10 +49,10 @@ public class MatchController {
         return ResponseEntity.ok().body(matchService.getNumberOfMatchesByTeam(teamId));
     }
 
-    //TODO fix because it passes an object there should be RequestBody but maybe remove the pathVariable and change URI to /update
     @PutMapping("/{matchId}")
     public ResponseEntity<MatchResponse> updateMatch(@PathVariable("matchId") int id, @RequestBody MatchResponse match){
-        return ResponseEntity.ok().body(matchService.updateMatch(match));
+        Match updatedMatch = matchMapper.matchResponseToMatch(match);
+        return ResponseEntity.ok().body(matchMapper.matchToMatchResponse(matchService.updateMatch(updatedMatch)));
     }
 
     @DeleteMapping("/{matchId}")

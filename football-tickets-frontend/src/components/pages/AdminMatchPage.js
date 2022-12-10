@@ -115,7 +115,8 @@ export default function AdminMatchPage() {
         const data = new FormData(event.currentTarget);
 
         const match = {
-            date: date,
+            id: updateMatch.id,
+            date: updateDate,
             home_team: teams.find(team => team.id === updateHomeTeam),
             away_team: teams.find(team => team.id === updateAwayTeam),
             ticket_number: data.get('tickets_number'),

@@ -1,9 +1,7 @@
 package com.ultras.footbalticketsapp.service;
 
-import com.ultras.footbalticketsapp.controller.match.MatchResponse;
-import com.ultras.footbalticketsapp.controller.ticket.BuyTicketRequest;
-import com.ultras.footbalticketsapp.controller.ticket.TicketResponse;
 import com.ultras.footbalticketsapp.mapper.TicketMapper;
+import com.ultras.footbalticketsapp.model.Match;
 import com.ultras.footbalticketsapp.model.Ticket;
 import com.ultras.footbalticketsapp.repository.TicketRepository;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
@@ -31,33 +29,31 @@ public class TicketServiceImpl implements TicketService {
     //TODO method need to be refactored because now it works but it is ugly
     @Override
     @Transactional
-    public TicketResponse buyTicket(BuyTicketRequest buyTicketRequest) {
-        Ticket ticket = ticketMapper.buyTicketRequestToTicket(buyTicketRequest);
-        MatchResponse match = matchService.getMatchById(ticket.getMatch().getId());
-        if(match.getTicket_number() < buyTicketRequest.getTicketAmount()){
+    public Ticket buyTicket(Ticket buyTicket, int ticketAmount) {
+        Match match = matchService.getMatchById(buyTicket.getMatch().getId());
+        if(match.getTicket_number() < ticketAmount){
             throw new RuntimeException("Not enough tickets available");
         }
-        matchService.TicketBought(match.getId(), buyTicketRequest.getTicketAmount());
-        for (int i = 0; i < buyTicketRequest.getTicketAmount(); i++) {
+        matchService.TicketBought(match.getId(), ticketAmount);
+        for (int i = 0; i < ticketAmount; i++) {
             Ticket saveTicket = new Ticket();
-            saveTicket.setBuyer(ticket.getBuyer());
-            saveTicket.setMatch(ticket.getMatch());
-            saveTicket.setPrice(ticket.getPrice());
+            saveTicket.setBuyer(buyTicket.getBuyer());
+            saveTicket.setMatch(buyTicket.getMatch());
+            saveTicket.setPrice(buyTicket.getPrice());
             ticketRepository.save(saveTicket);
         }
-        return ticketMapper.ticketToTicketResponse(ticket);
-
+        return buyTicket;
     }
 
     @Override
-    public TicketResponse getTicketById(int id) {
+    public Ticket getTicketById(int id) {
         Ticket ticket = ticketRepository.findById(id).orElse(null);
-        return ticketMapper.ticketToTicketResponse(ticket);
+        return ticket;
     }
 
     @Override
-    public List<TicketResponse> getTicketsByUserId(int userId) {
-        return ticketMapper.ticketsToTicketsResponse(ticketRepository.findAllByUserId(userId));
+    public List<Ticket> getTicketsByUserId(int userId) {
+        return ticketRepository.findAllByUserId(userId);
     }
 
     @Override
