@@ -2,7 +2,7 @@ package com.ultras.footbalticketsapp.controller;
 
 import com.ultras.footbalticketsapp.controller.ticket.BuyTicketRequest;
 import com.ultras.footbalticketsapp.controller.ticket.TicketResponse;
-import com.ultras.footbalticketsapp.mapper.TicketMapper;
+import com.ultras.footbalticketsapp.controller.ticket.TicketMapper;
 import com.ultras.footbalticketsapp.model.Ticket;
 import com.ultras.footbalticketsapp.serviceInterface.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;

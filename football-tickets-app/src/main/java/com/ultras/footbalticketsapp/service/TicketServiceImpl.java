@@ -1,6 +1,6 @@
 package com.ultras.footbalticketsapp.service;
 
-import com.ultras.footbalticketsapp.mapper.TicketMapper;
+import com.ultras.footbalticketsapp.controller.ticket.TicketMapper;
 import com.ultras.footbalticketsapp.model.Match;
 import com.ultras.footbalticketsapp.model.Ticket;
 import com.ultras.footbalticketsapp.repository.TicketRepository;

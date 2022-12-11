@@ -6,7 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ultras.footbalticketsapp.controller.user.NewPasswordRequest;
-import com.ultras.footbalticketsapp.mapper.UserMapper;
+import com.ultras.footbalticketsapp.controller.user.UserMapper;
 import com.ultras.footbalticketsapp.model.AccountType;
 import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.repository.UserRepository;
