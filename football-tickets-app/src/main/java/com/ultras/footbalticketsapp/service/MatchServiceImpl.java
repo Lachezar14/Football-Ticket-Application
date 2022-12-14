@@ -1,8 +1,6 @@
 package com.ultras.footbalticketsapp.service;
 
-import com.ultras.footbalticketsapp.controller.match.MatchResponse;
-import com.ultras.footbalticketsapp.controller.match.NewMatchRequest;
-import com.ultras.footbalticketsapp.mapper.MatchMapper;
+import com.ultras.footbalticketsapp.controller.match.MatchMapper;
 import com.ultras.footbalticketsapp.model.Match;
 import com.ultras.footbalticketsapp.repository.MatchRepository;
 import com.ultras.footbalticketsapp.serviceInterface.MatchService;
@@ -25,27 +23,26 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public MatchResponse saveMatch(NewMatchRequest newMatchRequest) {
-        Match match = matchMapper.newMatchRequestToMatch(newMatchRequest);
+    public Match saveMatch(Match match) {
         if(matchRepository.findByHomeTeamAndAwayTeamAndDate(match.getHome_team().getId(), match.getAway_team().getId(), match.getDate()) != null){
             throw new RuntimeException("Match already exists");
         }
-        if(newMatchRequest.getHome_team().getName() == newMatchRequest.getAway_team().getName()){
+        if(match.getHome_team().getName() == match.getAway_team().getName()){
             throw new RuntimeException("Home team and away team cannot be the same");
         }
         matchRepository.save(match);
-        return matchMapper.matchToMatchResponse(match);
+        return match;
     }
 
     @Override
-    public MatchResponse getMatchById(int matchId) {
+    public Match getMatchById(int matchId) {
         Match match = matchRepository.findById(matchId).orElse(null);
-        return matchMapper.matchToMatchResponse(match);
+        return match;
     }
 
     @Override
-    public List<MatchResponse> getAllMatches() {
-        return matchMapper.matchesToMatchesResponse(matchRepository.findAll());
+    public List<Match> getAllMatches() {
+        return matchRepository.findAll();
     }
 
     @Override
@@ -53,22 +50,21 @@ public class MatchServiceImpl implements MatchService {
         return matchRepository.getNumberOfMatchesByTeam(teamId);
     }
     @Override
-    public MatchResponse updateMatch(MatchResponse match) {
+    public Match updateMatch(Match match) {
         Match toUpdate = matchRepository.findById(match.getId()).orElse(null);
-        Match updated = matchMapper.matchResponseToMatch(match);
         if(toUpdate == null){
             throw new RuntimeException("Match not found");
         }
         if(match.getHome_team().getName() == match.getAway_team().getName()){
             throw new RuntimeException("Home team and away team cannot be the same");
         }
-        toUpdate.setHome_team(updated.getHome_team());
-        toUpdate.setAway_team(updated.getAway_team());
-        toUpdate.setDate(updated.getDate());
-        toUpdate.setTicket_number(updated.getTicket_number());
-        toUpdate.setTicket_price(updated.getTicket_price());
+        toUpdate.setHome_team(match.getHome_team());
+        toUpdate.setAway_team(match.getAway_team());
+        toUpdate.setDate(match.getDate());
+        toUpdate.setTicket_number(match.getTicket_number());
+        toUpdate.setTicket_price(match.getTicket_price());
         matchRepository.save(toUpdate);
-        return matchMapper.matchToMatchResponse(toUpdate);
+        return toUpdate;
     }
 
     @Override

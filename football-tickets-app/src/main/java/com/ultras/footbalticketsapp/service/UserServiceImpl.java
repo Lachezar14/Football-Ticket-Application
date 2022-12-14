@@ -6,10 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ultras.footbalticketsapp.controller.user.NewPasswordRequest;
-import com.ultras.footbalticketsapp.controller.user.RegisterUserRequest;
-import com.ultras.footbalticketsapp.controller.user.UpdateUserRequest;
-import com.ultras.footbalticketsapp.controller.user.UserDTO;
-import com.ultras.footbalticketsapp.mapper.UserMapper;
+import com.ultras.footbalticketsapp.controller.user.UserMapper;
 import com.ultras.footbalticketsapp.model.AccountType;
 import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.repository.UserRepository;
@@ -44,20 +41,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO registerUser(RegisterUserRequest user) {
+    public User registerUser(User user) {
         User userEmail = userRepository.findByEmail(user.getEmail());
         if(userEmail != null){
             throw new RuntimeException("Email already in use");
         }
-        User newUser = userMapper.registerUserRequestToUser(user);
-        newUser.setRole(AccountType.valueOf(user.getRoleName()));
-        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        userRepository.save(newUser);
-        return userMapper.userToUserDTO(newUser);
+        user.setRole(AccountType.valueOf("USER"));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return user;
     }
 
     @Override
-    public void makeUserAdmin(UserDTO user) {
+    public void makeUserAdmin(User user) {
         User userToUpdate = userRepository.findById(user.getId()).orElse(null);
         if(userToUpdate == null){
             throw new RuntimeException("User not found");
@@ -67,13 +63,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDTO getUserById(int userId) {
-        return userMapper.userToUserDTO(userRepository.findById(userId).orElse(null));
+    public User getUserById(int userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 
     @Override
-    public UserDTO getUserByEmail(String email) {
-        return userMapper.userToUserDTO(userRepository.findByEmail(email));
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -90,25 +86,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        return userMapper.usersToUsersDTO(userRepository.findAllByRole(AccountType.USER));
+    public List<User> getAllUsers() {
+        return userRepository.findAllByRole(AccountType.USER);
     }
 
+    //TODO: ask about this method cause now it throws exception cause password is null
     @Override
-    public UserDTO updateUser(UpdateUserRequest updateUserRequest) {
-        User userToUpdate = userRepository.findById(updateUserRequest.getId()).orElse(null);
+    public User updateUser(User updateUser) {
+        User userToUpdate = userRepository.findById(updateUser.getId()).orElse(null);
         if(userToUpdate == null){
             throw new RuntimeException("User not found");
         }
-        if(userRepository.findByEmail(updateUserRequest.getEmail()) != null){
+        if(userRepository.findByEmail(updateUser.getEmail()) != null & !userToUpdate.getEmail().equals(updateUser.getEmail())){
             throw new RuntimeException("Email already in use");
         }
-        userToUpdate.setFirst_name(updateUserRequest.getFirst_name());
-        userToUpdate.setLast_name(updateUserRequest.getLast_name());
-        userToUpdate.setPhone_number(updateUserRequest.getPhone_number());
-        userToUpdate.setEmail(updateUserRequest.getEmail());
+        userToUpdate.setFirst_name(updateUser.getFirst_name());
+        userToUpdate.setLast_name(updateUser.getLast_name());
+        userToUpdate.setPhone_number(updateUser.getPhone_number());
+        userToUpdate.setEmail(updateUser.getEmail());
         userRepository.save(userToUpdate);
-        return userMapper.userToUserDTO(userToUpdate);
+        return userToUpdate;
     }
 
     @Override

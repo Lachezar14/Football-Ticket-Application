@@ -50,6 +50,7 @@ export default function ProfilePage() {
             console.log("User updated successfully", response.data);
             sessionStorage.setItem("user", JSON.stringify(response.data));
             setAlert(true);
+            window.scroll(0, 0);
             setAlertContent('Profile updated successfully!');
             setTimeout(window.location.reload.bind(window.location), 1000);
         }).catch((error) => {
@@ -73,6 +74,7 @@ export default function ProfilePage() {
         }
         userService.updatePassword(object).then((res) => {
             setAlert(true);
+            window.scroll(0, 0);
             setAlertContent('Password changed successfully!');
             setTimeout(window.location.reload.bind(window.location), 1000);
         }).catch((error) => {

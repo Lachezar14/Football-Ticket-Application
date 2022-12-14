@@ -1,4 +1,4 @@
-package com.ultras.footbalticketsapp.mapper;
+package com.ultras.footbalticketsapp.controller.footballTeam;
 
 import com.ultras.footbalticketsapp.controller.footballTeam.FootballTeamResponse;
 import com.ultras.footbalticketsapp.controller.footballTeam.NewFootballTeamRequest;

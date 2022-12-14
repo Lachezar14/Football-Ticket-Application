@@ -1,4 +1,4 @@
-package com.ultras.footbalticketsapp.mapper;
+package com.ultras.footbalticketsapp.controller.match;
 
 import com.ultras.footbalticketsapp.controller.match.MatchResponse;
 import com.ultras.footbalticketsapp.controller.match.NewMatchRequest;
