@@ -1,9 +1,14 @@
 package com.ultras.footbalticketsapp.security.config;
 
+import com.ultras.footbalticketsapp.controller.user.UserMapper;
+import com.ultras.footbalticketsapp.model.AccountType;
+import com.ultras.footbalticketsapp.model.User;
+import com.ultras.footbalticketsapp.repository.UserRepository;
 import com.ultras.footbalticketsapp.security.AuthenticationFilter;
 import com.ultras.footbalticketsapp.security.AuthorizationFilter;
 import com.ultras.footbalticketsapp.security.CustomAuthenticationFailureHandler;
 import com.ultras.footbalticketsapp.service.UserServiceImpl;
+import com.ultras.footbalticketsapp.serviceInterface.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -85,5 +90,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public UserService userService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, UserMapper userMapper) {
+        UserServiceImpl userService = new UserServiceImpl(userRepository, bCryptPasswordEncoder, userMapper);
+        userService.createAdminIfNotExists(new User(0,"Admin","Admin","1234567898","admin@gmail.com","admin", AccountType.ADMIN));
+        return userService;
     }
 }

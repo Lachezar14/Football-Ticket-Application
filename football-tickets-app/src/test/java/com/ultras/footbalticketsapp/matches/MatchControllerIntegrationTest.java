@@ -139,7 +139,6 @@ public class MatchControllerIntegrationTest {
     }
 
     @Test
-    // TODO fix when the method in the controller is fixed
     void testUpdateMatch() throws Exception {
         //given
         Stadium stadium = new Stadium(1, "Name", 3);

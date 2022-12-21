@@ -40,6 +40,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.userMapper = userMapper;
     }
 
+    public User createAdminIfNotExists(User user){
+        if(userRepository.findByEmail(user.getEmail()) == null){
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            user.setRole(AccountType.ADMIN);
+            return userRepository.save(user);
+        }
+        return null;
+    }
+
     @Override
     public User registerUser(User user) {
         User userEmail = userRepository.findByEmail(user.getEmail());
@@ -90,7 +99,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findAllByRole(AccountType.USER);
     }
 
-    //TODO: ask about this method cause now it throws exception cause password is null
     @Override
     public User updateUser(User updateUser) {
         User userToUpdate = userRepository.findById(updateUser.getId()).orElse(null);

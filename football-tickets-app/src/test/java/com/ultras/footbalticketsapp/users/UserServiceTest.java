@@ -41,17 +41,42 @@ class  UserServiceTest {
     }
 
     @Test
+    void testCreateAdminIfNotExists() {
+        //given
+        User admin = new User();
+
+        //when
+        lenient().when(userRepository.findByEmail((String) any())).thenReturn(null);
+        when(userRepository.save((admin))).thenReturn(admin);
+        User saved = userService.createAdminIfNotExists(admin);
+
+        //then
+        verify(userRepository).findByEmail((String) any());
+        verify(userRepository).save(admin);
+        assertThat(saved).isNotNull();
+    }
+
+    @Test
+    void testCreateAdminIfNotExists_whenAdminAlreadyExists() {
+        //given
+        User admin = new User(1,"admin","admin","1234567898","admin@gmail.com", "admin",AccountType.ADMIN);
+        //when
+        when(userRepository.findByEmail((String) any())).thenReturn(admin);
+        //when(userRepository.save((admin))).thenReturn(admin);
+
+        //then
+        assertThat(userService.createAdminIfNotExists(admin)).isNull();
+        verify(userRepository).findByEmail((String) any());
+        //verify(userRepository).save(admin);
+
+    }
+
+    @Test
     void testSaveUser() {
         //given
         User user = new User(1,"bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", AccountType.USER);
 
         //when
-//        when(userMapper.registerUserRequestToUser(any(RegisterUserRequest.class))).thenReturn(
-//                new User(1, "bobby", "smurda", "1234567899", "bobby@gmial.com", "12345", AccountType.USER));
-
-//        when(userMapper.userToUserDTO(any(User.class))).thenReturn(
-//                new UserDTO(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", AccountType.USER));
-
         when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("xsdetJ53Y");
         when(userRepository.save(any(User.class))).thenReturn(
                 new User(1, "bobby", "smurda", "1234567899", "bobby@gmail.com", "12345", AccountType.USER));
@@ -59,8 +84,6 @@ class  UserServiceTest {
         User created = userService.registerUser(user);
 
         //then
-        //verify(userMapper).registerUserRequestToUser(any(RegisterUserRequest.class));
-        //verify(userMapper).userToUserDTO(any(User.class));
         verify(passwordEncoder).encode(any(CharSequence.class));
         verify(userRepository).save(any(User.class));
 
@@ -145,12 +168,10 @@ class  UserServiceTest {
 
         //when
         when(userRepository.findByEmail((String) any())).thenReturn(user);
-        //when(userMapper.userToUserDTO((User) any())).thenReturn(userDTO);
 
         //then
         assertThat(user).isEqualTo(userService.getUserByEmail("bobby@gmail.com"));
         verify(userRepository).findByEmail((String) any());
-        //verify(userMapper).userToUserDTO((User) any());
     }
 
     @Test
@@ -161,28 +182,28 @@ class  UserServiceTest {
         verify(userRepository).findAllByRole(AccountType.USER);
     }
 
-    //TODO fix this test
-    @Disabled
     @Test
     void testUpdateUser() {
         //given
         User userToUpdate = new User(1, "john", "doe", "1234567899", "johnny@gmail.com", "12345", AccountType.USER);
-        User updatedUser = new User(1, "bobby", "smurda", "1235555555", "bobby@gmail.com", "54321", AccountType.USER);
+        User updatedUser = new User(1, "bobby", "smurda", "1235555555", "bobby@gmail.com", "12345", AccountType.USER);
 
         //when
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(userToUpdate));
+        when(userRepository.findByEmail(any(String.class))).thenReturn(null);
         when(userRepository.save(any(User.class))).thenReturn(updatedUser);
-        //when(userMapper.userToUserDTO(any(User.class))).thenReturn(updatedUser);
-        userService.updateUser(userToUpdate);
+        User updated = userService.updateUser(updatedUser);
 
         //then
-        //verify(userMapper).userToUserDTO(any(User.class));
+        assertSame(updatedUser.getId(), updated.getId());
+        assertSame(updatedUser.getFirst_name(), updated.getFirst_name());
+        assertSame(updatedUser.getLast_name(), updated.getLast_name());
+        assertSame(updatedUser.getEmail(), updated.getEmail());
+        assertSame(updatedUser.getPhone_number(), updated.getPhone_number());
+        assertSame(updatedUser.getRole(), updated.getRole());
         verify(userRepository).findById(any(Integer.class));
+        verify(userRepository).findByEmail(any(String.class));
         verify(userRepository).save(any(User.class));
-        assertThat(userToUpdate.getFirst_name()).isEqualTo(updatedUser.getFirst_name());
-        assertThat(userToUpdate.getLast_name()).isEqualTo(updatedUser.getLast_name());
-        assertThat(userToUpdate.getEmail()).isEqualTo(updatedUser.getEmail());
-        assertThat(userToUpdate.getPhone_number()).isEqualTo(updatedUser.getPhone_number());
     }
 
     @Test
@@ -192,17 +213,32 @@ class  UserServiceTest {
 
         //when
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
-        //when(userMapper.userToUserDTO(any(User.class))).thenReturn(userDTO);
 
         //then
-
         assertThatThrownBy(() -> userService.updateUser(userToUpdate))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("User not found");
 
         verify(userRepository).findById(any(Integer.class));
-        //verify(userMapper).userToUserDTO(any(User.class));
+    }
 
+    @Test
+    void testUpdateUser_throwsRuntimeException_whenUserEmailIsInUse(){
+        //given
+        User userToUpdate = new User(1, "john", "doe", "1234567899", "joe@gmail.com", "12345", AccountType.USER);
+        User updatedUser = new User(2, "bobby", "smurda", "1235555555", "bobby@gmail.com", "54321", AccountType.USER);
+
+        //when
+        when(userRepository.findById(any(Integer.class))).thenReturn(Optional.of(userToUpdate));
+        lenient().when(userRepository.findByEmail((String) any())).thenReturn(updatedUser);
+
+         //then
+        assertThatThrownBy(() -> userService.updateUser(updatedUser))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Email already in use");
+
+        verify(userRepository).findById(any(Integer.class));
+        verify(userRepository).findByEmail((String) any());
     }
 
     @Test
@@ -233,10 +269,8 @@ class  UserServiceTest {
 
         //when
         when(userRepository.findById(any(Integer.class))).thenReturn(java.util.Optional.of(user));
-        //userService.updatePassword(newPasswordRequest);
 
         //then
-
         assertThatThrownBy(() -> userService.updatePassword(newPasswordRequest))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Wrong password");
@@ -252,10 +286,8 @@ class  UserServiceTest {
 
         //when
         when(userRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
-        //userService.updatePassword(newPasswordRequest);
 
         //then
-
         assertThatThrownBy(() -> userService.updatePassword(newPasswordRequest))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("User not found");

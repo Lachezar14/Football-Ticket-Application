@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -121,8 +122,16 @@ class  MatchServiceTest {
         verify(matchRepository).findAll();
     }
 
-    //TODO: fix this test
-    @Disabled
+    @Test
+    void testGetNumberOfMatchesByTeam() {
+        //when
+        when(matchRepository.getNumberOfMatchesByTeam(anyInt())).thenReturn(10);
+
+        //then
+        assertEquals(10, matchService.getNumberOfMatchesByTeam(1));
+        verify(matchRepository).getNumberOfMatchesByTeam(anyInt());
+    }
+
     @Test
     void testUpdateMatch() {
         //given
@@ -130,30 +139,32 @@ class  MatchServiceTest {
         FootballTeam footballTeam = new FootballTeam(1, "Name", stadium);
         Stadium stadium1 = new Stadium(2, "OtherName", 10);
         FootballTeam footballTeam1 = new FootballTeam(2, "OtherName", stadium1);
-        Date now = new Date(); //return current date and time
-        Match matchToUpdate = new Match(1,footballTeam, footballTeam1, now, 100,10.0);
+        Date now = new Date(10); //return current date and time
+        Match matchToUpdate = new Match(1,footballTeam, footballTeam1, now, 100,10);
 
         Stadium stadium2 = new Stadium(1, "SomeName", 11);
         FootballTeam footballTeam2 = new FootballTeam(1, "SomeName", stadium2);
         Stadium stadium3 = new Stadium(2, "OtherSomeName", 12);
         FootballTeam footballTeam3 = new FootballTeam(2, "OtherSomeName", stadium3);
-        Date now1 = new Date(); //return current date and time
-        Match updatedMatch = new Match(2,footballTeam2, footballTeam3, now1, 110,12.0);
+        Date now1 = new Date(10); //return current date and time
+        Match updatedMatch = new Match(1,footballTeam2, footballTeam3, now1, 110,12);
 
 
         //when
         when(matchRepository.findById((Integer) any())).thenReturn(Optional.of(matchToUpdate));
         when(matchRepository.save((Match) any())).thenReturn(updatedMatch);
-        //when(matchMapper.matchToMatchResponse((Match) any())).thenReturn(updatedMatchResponse);
-        //when(matchMapper.matchResponseToMatch((MatchResponse) any())).thenReturn(updatedMatch);
 
+        Match updated = matchService.updateMatch(updatedMatch);
 
         //then
-        assertSame(updatedMatch, matchService.updateMatch(matchToUpdate));
+        assertSame(updatedMatch.getId(), updated.getId());
+        assertSame(updatedMatch.getDate(), updated.getDate());
+        assertSame(updatedMatch.getAway_team(), updated.getAway_team());
+        assertSame(updatedMatch.getHome_team(), updated.getHome_team());
+        assertEquals(updatedMatch.getTicket_price(), updated.getTicket_price(), 0.001);
+        assertSame(updatedMatch.getTicket_number(), updated.getTicket_number());
         verify(matchRepository).findById((Integer) any());
         verify(matchRepository).save((Match) any());
-        //verify(matchMapper).matchToMatchResponse((Match) any());
-        //verify(matchMapper).matchResponseToMatch((MatchResponse) any());
     }
 
     @Test

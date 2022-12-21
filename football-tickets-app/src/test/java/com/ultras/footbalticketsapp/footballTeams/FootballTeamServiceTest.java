@@ -18,8 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -109,8 +108,6 @@ public class FootballTeamServiceTest {
         verify(teamRepository).findAll();
     }
 
-    //TODO fix the test
-    @Disabled
     @Test
     void testUpdateFootballTeam(){
         //given
@@ -121,13 +118,11 @@ public class FootballTeamServiceTest {
 
         //when
         when(teamRepository.findById((Integer) any())).thenReturn(Optional.of(footballTeam));
-        when(teamRepository.save((FootballTeam) any())).thenReturn(updatedTeam);
+        when(teamRepository.save(footballTeam)).thenReturn(updatedTeam);
         when(stadiumRepository.save((Stadium) any())).thenReturn(updatedStadium);
         when(stadiumRepository.findById((Integer) any())).thenReturn(Optional.of(stadium));
-        //when(teamMapper.footballTeamToFootballTeamResponse((FootballTeam) any())).thenReturn(updated);
-        //when(teamMapper.footballTeamResponseToFootballTeam((FootballTeamResponse) any())).thenReturn(updatedTeam);
 
-        FootballTeam updated = teamService.updateFootballTeam(footballTeam);
+        FootballTeam updated = teamService.updateFootballTeam(updatedTeam);
 
         //then
         assertSame(updatedTeam.getId(), updated.getId());
@@ -139,8 +134,6 @@ public class FootballTeamServiceTest {
         verify(teamRepository).findById((Integer) any());
         verify(stadiumRepository).save((Stadium) any());
         verify(stadiumRepository).findById((Integer) any());
-        //verify(teamMapper).footballTeamToFootballTeamResponse((FootballTeam) any());
-        //verify(teamMapper).footballTeamResponseToFootballTeam((FootballTeamResponse) any());
     }
 
     @Test

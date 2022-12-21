@@ -1,5 +1,6 @@
 package com.ultras.footbalticketsapp.users;
 
+import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ultras.footbalticketsapp.controller.UserController;
 import com.ultras.footbalticketsapp.controller.user.*;
@@ -7,12 +8,24 @@ import com.ultras.footbalticketsapp.controller.user.UserResponse;
 import com.ultras.footbalticketsapp.model.AccountType;
 import com.ultras.footbalticketsapp.model.User;
 import com.ultras.footbalticketsapp.serviceInterface.UserService;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.ResultActions;
@@ -27,10 +40,8 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @WebMvcTest
@@ -46,6 +57,21 @@ public class UserControllerIntegrationTest {
 
     @MockBean
     private UserService userService;
+
+    @Mock
+    private Authentication auth;
+
+    @BeforeEach
+    public void initSecurityContext() {
+        when(auth.getPrincipal()).thenReturn("leclerc@gmail.com");
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    @AfterEach
+    public void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
+
 
     @Test
     void testRegisterUser() throws Exception {
@@ -118,21 +144,46 @@ public class UserControllerIntegrationTest {
                                         + ".org\",\"role\":\"USER\"}"));
     }
 
-    //TODO fix this test
-//    @Disabled
-//    @Test
-//    void testGetUserByEmail() throws Exception {
-//        when(userService.getUserByEmail((String) any()))
-//                .thenReturn(new UserDTO(1, "Jane", "Doe", "4105551212", "jane.doe@example.org", AccountType.ADMIN));
-//
-//        mockMvc.perform(get("/api/email/{email}", "jane.doe@example.org"))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-//                .andExpect(MockMvcResultMatchers.content()
-//                        .string(
-//                                "{\"id\":1,\"first_name\":\"Jane\",\"last_name\":\"Doe\",\"phone_number\":\"4105551212\",\"email\":\"jane.doe@example"
-//                                        + ".org\",\"role\":\"ADMIN\"}"));
-//    }
+    @Test
+    @WithMockUser(username = "leclerc@gmail.com", password = "12345", roles = "USER")
+    void testGetUserByEmail() throws Exception {
+        //given
+        User user = new User(1,"Charles","Leclerc","2840164926","leclerc@gmail.com","12345",AccountType.USER);
+        UserResponse userResponse = new UserResponse(1,"Charles","Leclerc","2840164926","leclerc@gmail.com",AccountType.USER);
+
+        //when
+        when(userService.getUserByEmail(anyString())).thenReturn(user);
+        when(userMapper.userToUserDTO((User) any())).thenReturn(userResponse);
+
+        //then
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/email/{email}", "leclerc@gmail.com");
+        MockMvcBuilders.standaloneSetup(userController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(
+                                "{\"id\":1,\"first_name\":\"Charles\",\"last_name\":\"Leclerc\",\"phone_number\":\"2840164926\",\"email\":\"leclerc@gmail.com\",\"role\":\"USER\"}"));
+    }
+
+    @Test
+    void testGetUserByEmail_throws401Unauthorized_whenAnotherUserTriesToAccessAnotherPersonInfo() throws Exception {
+        //given
+        User user = new User(1, "Lele", "Mele", "2840164926", "gg@gmail.com", "12345", AccountType.USER);
+        UserResponse userResponse = new UserResponse(1, "Lele", "Mele", "2840164926", "gg@gmail.com", AccountType.USER);
+
+        //when
+        when(userService.getUserByEmail(anyString())).thenReturn(user);
+        when(userMapper.userToUserDTO((User) any())).thenReturn(userResponse);
+
+        //then
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/email/{email}", "gg@gmail.com");
+        MockMvcBuilders.standaloneSetup(userController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
 
     @Test
     void testGetAllUsers() throws Exception {
@@ -150,7 +201,6 @@ public class UserControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
-    //TODO fix this test when i fix the controller method
     @Test
     void testUpdateUser() throws Exception {
         //given

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
+    User createAdminIfNotExists(User user);
     User registerUser(User user);
     void makeUserAdmin(User user);
     User getUserById(int userId);

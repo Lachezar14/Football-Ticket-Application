@@ -26,7 +26,6 @@ public class TicketServiceImpl implements TicketService {
         this.ticketMapper = ticketMapper;
     }
 
-    //TODO method need to be refactored because now it works but it is ugly
     @Override
     @Transactional
     public Ticket buyTicket(Ticket buyTicket, int ticketAmount) {
