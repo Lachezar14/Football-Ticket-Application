@@ -1,21 +1,3 @@
-
-{/*describe('The matches page', () => {
-  
-  beforeEach(() => {
-    cy.visit('http://localhost:3000/matches')
-  })
-  
-  it('gets all matches from database', () => {
-    cy.intercept('GET', 'http://localhost:8080/matches')
-  })
-  
-  it('goes to checkout when button "Buy tickets" is clicked', () => {
-    cy.get("#root > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-2.MuiGrid-spacing-md-3.css-4tb6dr-MuiGrid-root > div:nth-child(2) > div > div.MuiCardActions-root.MuiCardActions-spacing.css-1u52i2l-MuiCardActions-root > a")
-        .contains('Buy tickets').click()
-    cy.url().should('include', 'ticketSale')
-  })
-})*/}
-
 describe('The login page', () => {
 
   beforeEach(() => {
@@ -44,6 +26,15 @@ describe('The teams page', () => {
     cy.get('#root > div > div > div.MuiGrid-root.MuiGrid-container.css-10mzr36-MuiGrid-root > div:nth-child(1) > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiCard-root.css-19d2s13-MuiPaper-root-MuiCard-root > div > form > button').click()
   
     cy.contains('Team created successfully')
+  });
+
+  it('shows error message when trying to add a team that exists', () => {
+    cy.get('#root > div > div > div.MuiGrid-root.MuiGrid-container.css-10mzr36-MuiGrid-root > div:nth-child(1) > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiCard-root.css-19d2s13-MuiPaper-root-MuiCard-root > div > form > div:nth-child(1) > div').type('TestTeam FC')
+    cy.get('#root > div > div > div.MuiGrid-root.MuiGrid-container.css-10mzr36-MuiGrid-root > div:nth-child(1) > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiCard-root.css-19d2s13-MuiPaper-root-MuiCard-root > div > form > div:nth-child(2)').type('Blabal')
+    cy.get('#root > div > div > div.MuiGrid-root.MuiGrid-container.css-10mzr36-MuiGrid-root > div:nth-child(1) > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiCard-root.css-19d2s13-MuiPaper-root-MuiCard-root > div > form > div:nth-child(3)').type('5000')
+    cy.get('#root > div > div > div.MuiGrid-root.MuiGrid-container.css-10mzr36-MuiGrid-root > div:nth-child(1) > div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiCard-root.css-19d2s13-MuiPaper-root-MuiCard-root > div > form > button').click()
+
+    cy.contains('Team already exists')
   });
   
     it('updates team from database', () => {
