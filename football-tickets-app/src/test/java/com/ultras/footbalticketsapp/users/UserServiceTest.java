@@ -273,7 +273,7 @@ class  UserServiceTest {
         //then
         assertThatThrownBy(() -> userService.updatePassword(newPasswordRequest))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Wrong password");
+                .hasMessageContaining("Wrong current password");
 
         verify(userRepository).findById(any(Integer.class));
     }

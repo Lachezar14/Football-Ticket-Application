@@ -2,7 +2,7 @@
 import jwt_decode from "jwt-decode";
 import userService from "./userService";
 
-const usersUrl = 'http://localhost:8080/api';
+const usersUrl = 'http://localhost:8080/users';
 
 const register = async (data) => {
     return axios.post(`${usersUrl}/register`, data, {headers: {'Content-Type': 'application/json'}});

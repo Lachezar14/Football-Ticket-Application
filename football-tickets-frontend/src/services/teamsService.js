@@ -16,7 +16,7 @@ const saveTeam = (team) => {
 }
 
 const updateTeam = (team) => {
-    return axios.put(`${teamsURL}/update`, team);
+    return axios.put(`${teamsURL}/${team.id}`, team);
 }
 
 const deleteTeam = (id) => {

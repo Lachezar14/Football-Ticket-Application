@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         else
         {
-            throw new RuntimeException("Wrong password");
+            throw new RuntimeException("Wrong current password");
         }
     }
 

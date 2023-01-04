@@ -128,7 +128,7 @@ public class FootballTeamControllerIntegrationTest {
 
         //then
         String content = (new ObjectMapper()).writeValueAsString(footballTeamResponse);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/teams/update")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/teams/{teamId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         MockMvcBuilders.standaloneSetup(footballTeamController)

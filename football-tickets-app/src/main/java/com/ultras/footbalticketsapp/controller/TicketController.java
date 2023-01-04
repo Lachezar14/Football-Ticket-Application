@@ -45,7 +45,7 @@ public class TicketController {
         return ResponseEntity.ok().body(ticketMapper.ticketsToTicketsResponse(ticketService.getTicketsByUserId(userId)));
     }
 
-    @GetMapping("/team/{teamId}")
+    @GetMapping("/avg/{teamId}")
     public ResponseEntity<Double> getAVGSaleOfTicketsPerTeam(@PathVariable("teamId") int teamId){
         return ResponseEntity.ok().body(ticketService.getAVGSaleOfTicketsPerTeam(teamId));
     }

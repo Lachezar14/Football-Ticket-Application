@@ -27,7 +27,7 @@ public class MatchServiceImpl implements MatchService {
         if(matchRepository.findByHomeTeamAndAwayTeamAndDate(match.getHome_team().getId(), match.getAway_team().getId(), match.getDate()) != null){
             throw new RuntimeException("Match already exists");
         }
-        if(match.getHome_team().getName() == match.getAway_team().getName()){
+        if(match.getHome_team().getId() == match.getAway_team().getId()){
             throw new RuntimeException("Home team and away team cannot be the same");
         }
         matchRepository.save(match);

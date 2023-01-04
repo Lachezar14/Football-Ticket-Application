@@ -1,7 +1,7 @@
 ﻿import axios from "axios";
 import authHeader from "./authHeader";
 
-const usersURL = "http://localhost:8080/api";
+const usersURL = "http://localhost:8080/users";
 
 //these methods that do not catch errors here, catch them in the pages and are displayed to the user
 //this is made so the user knows what is the error and can correct it
@@ -11,7 +11,7 @@ const makeAdmin = (object) => {
 
 const getAllUsers = () => {
     try {
-        return axios.get(`${usersURL}/users`);
+        return axios.get(`${usersURL}/`);
     } catch (error) {
         console.log('Error while calling getUsers services ', error);
     }

@@ -45,8 +45,8 @@ public class FootballTeamController {
         return ResponseEntity.ok().body(footballTeamMapper.footballTeamsToFootballTeamsResponse(footballTeamService.getAllFootballTeams()));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<FootballTeamResponse> updateFootballTeam(@RequestBody FootballTeamResponse updateTeam){
+    @PutMapping("/{teamId}")
+    public ResponseEntity<FootballTeamResponse> updateFootballTeam(@RequestBody FootballTeamResponse updateTeam, @PathVariable("teamId") int teamId){
         FootballTeam footballTeam = footballTeamMapper.footballTeamResponseToFootballTeam(updateTeam);
         return ResponseEntity.ok().body(footballTeamMapper.footballTeamToFootballTeamResponse(footballTeamService.updateFootballTeam(footballTeam)));
     }

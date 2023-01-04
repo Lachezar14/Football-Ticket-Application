@@ -269,13 +269,10 @@ export default function AdminTeamPage() {
                                     required
                                     fullWidth
                                     label="Team Name"
-                                    //InputLabelProps={{ shrink: true }}
                                     name="name"
-                                    //key={team ? team.name :""}
                                     key={team.name}
                                     defaultValue={team.name}
-                                    //defaultValue={team ? team.name :""}
-                                    //value={team.name}
+                                
                                     autoComplete="team-name"
                                     autoFocus
                                 />
@@ -286,10 +283,7 @@ export default function AdminTeamPage() {
                                     label="Stadium Name"
                                     name="stadium"
                                     key={team ? team.stadium.name : 2}
-                                    //key={team.stadium.name}
-                                    //defaultValue={team.stadium.name}
                                     defaultValue={team ? team.stadium.name : ""}
-                                    //value={team.stadium.name}
                                     autoComplete="stadium-name"
                                     autoFocus
                                 />
@@ -300,10 +294,7 @@ export default function AdminTeamPage() {
                                     label="Stadium Capacity"
                                     name="capacity"
                                     key={team ? team.stadium.capacity : 1}
-                                    //key={team.stadium.capacity}
-                                    //defaultValue={team.stadium.capacity}
                                     defaultValue={team ? team.stadium.capacity : ""}
-                                    //value={team.stadium.capacity}
                                     autoComplete="stadium-capacity"
                                     autoFocus
                                 />

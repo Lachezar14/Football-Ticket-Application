@@ -87,7 +87,7 @@ public class UserControllerIntegrationTest {
 
         //then
         String content = (new ObjectMapper()).writeValueAsString(registerUserRequest);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/api/register")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(userController).build().perform(requestBuilder);
@@ -97,7 +97,7 @@ public class UserControllerIntegrationTest {
                         .string(
                                 "{\"id\":1,\"first_name\":\"Jane\",\"last_name\":\"Doe\",\"phone_number\":\"4105551212\",\"email\":\"jane.doe@example"
                                         + ".org\",\"role\":\"USER\"}"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("http://localhost/api/1"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("http://localhost/users/1"));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class UserControllerIntegrationTest {
 
         //then
         String content = (new ObjectMapper()).writeValueAsString(userResponse);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/api/admin")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/users/admin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         MockMvcBuilders.standaloneSetup(userController)
@@ -132,7 +132,7 @@ public class UserControllerIntegrationTest {
                 .thenReturn(new UserResponse(1, "Jane", "Doe", "4105551212", "jane.doe@example.org", AccountType.USER));
 
         //then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/{userId}", 1);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/{userId}", 1);
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -156,7 +156,7 @@ public class UserControllerIntegrationTest {
         when(userMapper.userToUserDTO((User) any())).thenReturn(userResponse);
 
         //then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/email/{email}", "leclerc@gmail.com");
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/email/{email}", "leclerc@gmail.com");
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -178,7 +178,7 @@ public class UserControllerIntegrationTest {
         when(userMapper.userToUserDTO((User) any())).thenReturn(userResponse);
 
         //then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/email/{email}", "gg@gmail.com");
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/email/{email}", "gg@gmail.com");
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -192,7 +192,7 @@ public class UserControllerIntegrationTest {
         when(userMapper.usersToUsersDTO((List<User>) any())).thenReturn(new ArrayList<>());
 
         //then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/users");
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/users/");
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)
@@ -215,7 +215,7 @@ public class UserControllerIntegrationTest {
 
         //then
         String content = (new ObjectMapper()).writeValueAsString(request);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/api/{userId}", 1)
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/users/{userId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         MockMvcBuilders.standaloneSetup(userController)
@@ -239,7 +239,7 @@ public class UserControllerIntegrationTest {
 
         //then
         String content = (new ObjectMapper()).writeValueAsString(request);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/api/new-password")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/users/new-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
         ResultActions resultActions = MockMvcBuilders.standaloneSetup(userController)
@@ -257,7 +257,7 @@ public class UserControllerIntegrationTest {
         doNothing().when(userService).deleteUserById(anyInt());
 
         //then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/api/{userId}", 1);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/users/{userId}", 1);
         MockMvcBuilders.standaloneSetup(userController)
                 .build()
                 .perform(requestBuilder)

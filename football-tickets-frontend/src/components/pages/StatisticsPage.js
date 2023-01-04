@@ -37,27 +37,6 @@ export default function StatisticsPage() {
         ))
         setRerender(true);
     }, [teams]);
-
-    {/*useEffect(() => {
-        teams.map((team) => (
-            statisticsService.getNumberOfMatchesByTeam(team.id).then((res) => {
-                team.matchesNr = res.data;
-                setTeams(teams);
-            })
-        ))
-        setRerender(true);
-    }, [teams]);
-
-    useEffect(() => {
-        teams.map((team) => (
-            statisticsService.getNumberOfTicketsByTeam(team.id).then((res) => {
-                team.ticketNr = res.data;
-                setTeams(teams);
-            })
-        ))
-        setRerender(true);
-    }, [teams]);
-    */}
     
     return (
         <>

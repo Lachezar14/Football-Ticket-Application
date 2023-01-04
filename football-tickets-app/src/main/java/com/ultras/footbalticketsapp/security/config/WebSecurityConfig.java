@@ -52,13 +52,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         AuthenticationFilter customAuthenticationFilter = new AuthenticationFilter(authenticationManagerBean(), authenticationFailureHandler(), userService);
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        customAuthenticationFilter.setFilterProcessesUrl("/users/login");
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/login/**", "/api/register/**", "/api/token/refresh/**", "/api/data", "/matches/**", "/teams/**", "/tickets/**",
-               "/api/users", "/api/statistics", "/api/**", "/websocket/**").permitAll();
-        http.authorizeRequests().antMatchers( "/api/user/**").hasAnyAuthority("USER");
-        http.authorizeRequests().antMatchers( "/api/admin/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/users/login/**", "/users/register/**", "/users/token/refresh/**", "/users/data", "/matches/**", "/teams/**", "/tickets/**",
+                "/users/statistics", "/users/**", "/websocket/**").permitAll();
+        http.authorizeRequests().antMatchers( "/users/user/**").hasAnyAuthority("USER");
+        http.authorizeRequests().antMatchers( "/users/admin/**").hasAnyAuthority("ADMIN");
 
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);

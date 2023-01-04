@@ -129,7 +129,7 @@ public class TicketControllerIntegrationTest {
         when(ticketService.getAVGSaleOfTicketsPerTeam(anyInt())).thenReturn(10.0d);
 
         //then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/tickets/team/{teamId}", 1);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/tickets/avg/{teamId}", 1);
         MockMvcBuilders.standaloneSetup(ticketController)
                 .build()
                 .perform(requestBuilder)

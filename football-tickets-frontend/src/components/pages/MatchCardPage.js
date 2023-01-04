@@ -12,7 +12,6 @@ import {useState, useEffect} from "react";
 import matchService from "../../services/matchService";
 import {Link} from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
 
 export default function MatchCardPage() {
 
@@ -22,15 +21,7 @@ export default function MatchCardPage() {
     useEffect(() => {
         matchService.getMatches().then(res => setMatches(res.data))
         console.log(matches)
-    }, []);{/*[matches]*/}
- 
-    const teamNames =["home_team", "away_team"];
-    const searchByName = (data) => {
-        return data.filter((value) => {
-            teamNames.some((teamName) => { value[teamName].toLowerCase().includes(search)})
-        })
-    }
-    
+    }, []);
     
     return (
             <div>
@@ -55,20 +46,23 @@ export default function MatchCardPage() {
                     <Typography variant="h5" align="center" color="text.secondary" paragraph>
                         Here are all available matches for which you can buy tickets.
                     </Typography>
-                    <Stack
-                        sx={{pt: 4}}
-                        direction="row"
-                        spacing={2}
-                        justifyContent="center"
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent:"center",
+                        alignItems:"center",
+                        mt: 5
+                    }}
                     >
+                        <Typography variant="h5" sx={{mr: 2}}>Search by team name:</Typography>
                         <TextField
                             id="search"
-                            label="Search field"
+                            label=""
                             type="search"
                             variant="outlined"
                             onChange={(e) => setSearch(e.target.value)}
                         />
-                    </Stack>
+                    </Box>
                 </Container>
             </Box>
             {/* End hero unit */}

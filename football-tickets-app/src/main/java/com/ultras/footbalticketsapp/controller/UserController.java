@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegisterUserRequest newUser) {
         User user = userMapper.registerUserRequestToUser(newUser);
         UserResponse savedUser = userMapper.userToUserDTO(userService.registerUser(user));
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/" + savedUser.getId()).toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/" + savedUser.getId()).toUriString());
         return ResponseEntity.created(uri).body(savedUser);
     }
 
@@ -60,7 +60,7 @@ public class UserController {
         return ResponseEntity.status(401).build();
     }
 
-    @GetMapping("/users")
+    @GetMapping("/")
     public ResponseEntity<List<UserResponse>> getAllUsers(){
         return ResponseEntity.ok().body(userMapper.usersToUsersDTO(userService.getAllUsers()));
     }
