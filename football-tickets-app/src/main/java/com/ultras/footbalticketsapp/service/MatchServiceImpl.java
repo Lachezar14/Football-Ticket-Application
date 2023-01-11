@@ -55,7 +55,7 @@ public class MatchServiceImpl implements MatchService {
         if(toUpdate == null){
             throw new RuntimeException("Match not found");
         }
-        if(match.getHome_team().getName() == match.getAway_team().getName()){
+        if(match.getHome_team().getId() == match.getAway_team().getId()){
             throw new RuntimeException("Home team and away team cannot be the same");
         }
         toUpdate.setHome_team(match.getHome_team());

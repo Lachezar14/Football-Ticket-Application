@@ -43,7 +43,7 @@ export default function ProfilePage() {
             first_name: data.get('first_name'),
             last_name: data.get('last_name'),
             phone_number: data.get('phone_number'),
-            email: data.get('username'),
+            email:user.email,
         }
         
         userService.updateUser(updateRequest).then((response) => {
@@ -139,7 +139,7 @@ export default function ProfilePage() {
                                 />
                                 <TextField
                                     margin="normal"
-                                    required
+                                    disabled
                                     fullWidth
                                     label="Email Address"
                                     name="username"

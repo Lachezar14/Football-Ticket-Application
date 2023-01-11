@@ -46,11 +46,11 @@ export default function AdminPage() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const updateRequest = {
-            id: userToAdmin.id,
+            id: user.id,
             first_name: data.get('first_name'),
             last_name: data.get('last_name'),
             phone_number: data.get('phone_number'),
-            email: data.get('username'),
+            email: user.email,
         }
 
         userService.updateUser(updateRequest).then((response) => {
@@ -58,6 +58,7 @@ export default function AdminPage() {
             sessionStorage.setItem("user", JSON.stringify(response.data));
             setAlert(true);
             setAlertContent('Profile updated successfully!');
+            window.scroll(0, 0);
             setTimeout(window.location.reload.bind(window.location), 1000);
         }).catch((error) => {
             setUpdateUserErrorMessage(error.response.data.message);
@@ -81,12 +82,13 @@ export default function AdminPage() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const object = {
-            id: userToAdmin.id,
+            id: user.id,
             current_password: data.get("current_password"),
             new_password: data.get("new_password")
         }
         userService.updatePassword(object).then((res) => {
             setAlert(true);
+            window.scroll(0, 0);
             setAlertContent('Password changed successfully!');
             setTimeout(window.location.reload.bind(window.location), 1000);
         }).catch((error) => {
@@ -175,7 +177,7 @@ export default function AdminPage() {
                                 />
                                 <TextField
                                     margin="normal"
-                                    required
+                                    disabled
                                     fullWidth
                                     label="Email Address"
                                     name="username"

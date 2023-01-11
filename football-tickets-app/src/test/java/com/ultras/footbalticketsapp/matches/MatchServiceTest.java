@@ -191,7 +191,6 @@ class  MatchServiceTest {
         Match match = new Match(1,footballTeam, footballTeam, now, 100,10.0);
 
         //when
-        //when(matchMapper.matchResponseToMatch(any())).thenReturn(match);
         when(matchRepository.findById((Integer) any())).thenReturn(Optional.of(match));
 
         //then
