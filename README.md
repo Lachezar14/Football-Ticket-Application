@@ -27,7 +27,7 @@ Application uses:
 2. Clone the project and navigate to its directory
 ```
 git clone https://github.com/Lachezar14/ULTRAS.git
-cd ./ULTRAS/
+cd ./football-tickets-app/
 ```
 3. Open a terminal and execute:
 ```
