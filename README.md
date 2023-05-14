@@ -26,7 +26,7 @@ Application uses:
 1. Ensure you have [Docker](https://www.docker.com/) installed
 2. Clone the project and navigate to its directory
 ```
-git clone https://github.com/Lachezar14/ULTRAS.git
+git clone https://github.com/Lachezar14/Football-Ticket-Application.git
 cd ./football-tickets-app/
 ```
 3. Open a terminal and execute:
